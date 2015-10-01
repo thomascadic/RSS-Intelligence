@@ -46,4 +46,4 @@ var readFile = function(path, callback){
 
 }
 
-readFile('../../data/ListFluxRSS-v2.txt', reader.fetch);
+readFile('../../data/flux.txt', reader.fetch);

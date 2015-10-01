@@ -5,6 +5,8 @@
 *	les analyse, et les rejette/écrit sur le disque selon le cas
 */
 
+var md5 = require('md5') ;
+
 var verbose = true ;
 
 /**
@@ -35,10 +37,18 @@ function error(msg){
  * "published" - The date that the article was published (Date).
  * "feed"      - {name, source, link}
  */
-var validate = function(article){
+var validate = function(articles){
 
-	if(verbose) console.log(article) ;
+	//console.log(articles) ;
 
+	for(i in articles){
+
+		article = articles[i] ;
+		//if(verbose) console.log(article) ;
+
+		id = md5(article.title) ;
+		trace(id+" -> "+article.title) ;
+	}
 }
 
 exports.validate = validate ;
