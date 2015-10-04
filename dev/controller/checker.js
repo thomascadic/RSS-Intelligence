@@ -7,6 +7,8 @@
 
 var md5 = require('md5') ;
 
+var storer = require("../storer/storer");
+
 var verbose = true ;
 
 /**
@@ -48,6 +50,9 @@ var validate = function(articles){
 
 		id = md5(article.title) ;
 		trace(id+" -> "+article.title) ;
+
+		// stockage
+		storer.store(id, article);
 	}
 }
 
