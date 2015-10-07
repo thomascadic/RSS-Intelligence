@@ -8,9 +8,13 @@
 var verbose = true;
 
 var object_tie = require('object-tie').config({
-	file: '../data/finalData.json',
+	file: '../../data/finalData.json',
 	warning: true
 });
+
+var table = {};
+
+object_tie.newLink(table);
 
 // 	var table = {
 // 		key: 'value',
@@ -39,9 +43,9 @@ function error(msg){
 
 
 var store = function(id, article){
-	if (verbose) { console.log(id + " - " + article)};
+	trace(id + " - " + article);
 
-	object_tie.addKey(table, {id: article});
+	eval("object_tie.addKey(table, {'"+id+"': article})");
 }
 
 
