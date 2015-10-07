@@ -5,7 +5,8 @@
 *	les analyse, et les rejette/écrit sur le disque selon le cas
 */
 
-var md5 = require('md5') ;
+var md5 = require('md5'),
+	detector = new (require('languagedetect'));
 
 var storer = require("../storer/storer");
 
@@ -46,7 +47,12 @@ var validate = function(articles){
 	for(i in articles){
 
 		article = articles[i] ;
-		//if(verbose) console.log(article) ;
+		languages = detector.detect(article.content) ;
+		language = languages[0] ;
+		language = language[0] ;
+		if(verbose) trace("Language guessed : "+language) ;
+		article.language = language ;
+		if(verbose) console.log(article) ;
 
 		id = md5(article.title) ;
 		trace(id+" -> "+article.title) ;
