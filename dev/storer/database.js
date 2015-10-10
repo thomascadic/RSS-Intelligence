@@ -48,7 +48,6 @@
 
 		MongoClient.connect(url, function(err, database) {
 			assert.equal(null, err);
-
 			db_read = database;
 
 			trace('db_read init');
@@ -69,7 +68,6 @@
 				assert.equal(null, err);
 
 				db_write = database;
-
 				trace('db_write init');
 			});
 
@@ -151,9 +149,6 @@
 	insert = function(table, tuple, callback){
 
 		var collection = db_write.collection(table);
-
-			//delete tuple._id ;
-			//tuple._id = require('mongodb').ObjectID();
 
 		collection.insert(tuple, function(err, result) {
 			trace("[insert] "+JSON.stringify(tuple)+" -> "+table);

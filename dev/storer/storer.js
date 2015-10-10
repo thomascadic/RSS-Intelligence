@@ -1,34 +1,16 @@
 /* storer.js */
 
 /**
- * Récupère les objets validés fournis par checker.js 
+ * Récupère les objets validés fournis par checker.js
  * et les stocke sur le disque
  */
 
+
+var database = require('./database');
+
+var table = "RSS";
+
 var verbose = true;
-
-var object_tie = require('object-tie').config({
-	file: '../../data/finalData.json',
-	warning: true
-});
-
-var table = {};
-
-object_tie.newLink(table);
-
-// 	var table = {
-// 		key: 'value',
-// 		key: 'value'
-// 	};
-
-// 	object_tie.newLink(table);
-
-
-// 	Insérer une entrée : object_tie.addKey(table, {newKey: 'newValue'});
-// 	Effacer une entrée : object_tie.deleteKey(table, 'key');
-
-// 	object_tie.unlink(table);
-// 	var newTable = object_tie.retrieve('filepath/otherfile.json');
 
 /**
  * debug
@@ -41,13 +23,17 @@ function error(msg){
 	console.error("[storer.js] " + msg);
 }
 
-
 var store = function(id, article){
-	trace(id + " - " + article);
+	trace(id + " -> " + article);
 
-	eval("object_tie.addKey(table, {'"+id+"': article})");
+	article._id = id ;
+
+	database.insert(table, article, function(err){
+
+		if(!err){
+			trace("File stored.") ;
+		}else error(err) ;
+	});
 }
-
-
 
 exports.store = store;

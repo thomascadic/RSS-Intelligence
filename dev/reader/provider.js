@@ -1,19 +1,19 @@
 /* provider.js */
 
-/** 
+/**
 *	Récupère des liens de flux RSS
 *	Soit en les lisant dans un fichier
 *	soit par REST
-*	
+*
 */
 
 var reader = require("./reader"),
 	lineReader = require('line-reader');
 
+var rest = require('../rest/rest'),
+	api = rest.api ;
+
 var verbose = true ;
-
-var port = 80 ;
-
 
 /**
  *	debug message
@@ -29,21 +29,26 @@ function error(msg){
 }
 
 /**
- *	Lit un fichier qui contient une url par ligne
- *	Callback es appelé pour chaque ligne
+ *	Fournit un fichier à lire et à stocker
  */
-var readFile = function(path, callback){
+api.post('/', function(req, res){
+
+});
+
+/**
+ *	Lit un fichier qui contient une url par ligne
+ */
+var readFile = function(path){
 
 	lineReader.eachLine(path, function(line) {
 	trace(" read line : "+line) ;
-			callback(line) ;
+			reader.fetch(line) ;
 	}).then(function (err) {
 		if (err){
 		error(err) ;
 	}
 	trace("File read") ;
 	});
-
 }
 
-readFile('../../data/flux.txt', reader.fetch);
+exports.readFile = readFile ;
