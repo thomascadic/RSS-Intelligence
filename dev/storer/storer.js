@@ -1,10 +1,12 @@
-/* storer.js */
-
-/**
- * Récupère les objets validés fournis par checker.js
- * et les stocke sur le disque
+/* storer.js
+ * ==========
+ * Couche d'abstraction entre le controller et les I/O sur le disque
+ *
+ * Ce module reçoit les demandes d'écritures/lectures en provenance du controleur,
+ * et les interprète, selon l'implémentation suivante.
+ * Si l'on devait un jour changer de sgbd ou de mode de stockage, ce module d'abstraction
+ * permettrait de rendre ceci transparent au niveau du controlleur.
  */
-
 
 var database = require('./database');
 
@@ -23,7 +25,7 @@ function error(msg){
 	console.error("[storer.js] " + msg);
 }
 
-var store = function(id, article){
+var store = function(id, article, callback){
 	trace(id + " -> " + article);
 
 	article._id = id ;
@@ -32,8 +34,21 @@ var store = function(id, article){
 
 		if(!err){
 			trace("File stored.") ;
-		}else error(err) ;
+			callback(null) ;
+		}else{
+			error(err) ;
+			callback(err) ;
+		}
 	});
 }
 
-exports.store = store;
+var get = function(table, query, projection, callback){
+
+   database.find(table, query, projection, function(err, time, items){
+	   if(!err) callback(null, time, items);
+	   else callback(err, time, err);
+   });
+}
+
+exports.store = store ;
+exports.get = get ;

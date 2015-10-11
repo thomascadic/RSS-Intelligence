@@ -23,7 +23,7 @@
 	var debug = false,			// scenario type
 		toFill = false,			// remplit la base de données aléatoires
 		verbose = true,			// détaille les operations
-		very_verbose = false,	// affiche les requetes
+		very_verbose = false,	// affiche les resultats
 		bench = true ;			// mesure le temps de recherche
 
 	var pool = 15 ; 			// taille du pool de connexions en ecriture
@@ -133,7 +133,7 @@
 			 console.log("[find] Found "+items.length+" docs in "+time+" ms") ;
 
 			if (very_verbose) console.dir(items) ;
-			trace("[find] "+items.length+" matching elements :");
+			trace("[find] "+items.length+" matching elements.");
            	callback(null, time, items);
            }
         });

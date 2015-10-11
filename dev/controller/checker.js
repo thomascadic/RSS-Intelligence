@@ -7,6 +7,7 @@
 
 var md5 = require('md5'),
 	detector = new (require('languagedetect')),
+	ObjectId = require('mongodb').ObjectID,
 	storer = require("../storer/storer");
 
 var PROBA_MINI = 0.4,	// probabilité minimum pour indiquer une langue
@@ -37,7 +38,7 @@ function guessLanguage(text){
 			language = languages[i] ;
 		  	name = language[0] ;
 		  	proba = language[1] ;
-		  	if((proba >= PROBA_MINI) && (proba_n - proba >= STEP_MINI)) guesses.push(name);
+		  	if((proba >= PROBA_MINI) && ((proba_n - proba) >= STEP_MINI)) guesses.push(name);
 		  	proba_n = proba ;
 		}
 		if(verbose) trace("Language guessed : "+guesses) ;
@@ -61,7 +62,7 @@ function guessLanguage(text){
  * "published" - The date that the article was published (Date).
  * "feed"      - {name, source, link}
  */
-var validate = function(articles){
+var validate = function(articles, callback){
 
 	//console.log(articles) ;
 
@@ -74,8 +75,26 @@ var validate = function(articles){
 		trace(id+" -> "+article.title) ;
 
 		// stockage
-		storer.store(id, article);
+		storer.store(id, article, function(err){
+			callback(err) ;
+		});
 	}
 }
 
+get = function(table, query, projection, callback){
+
+console.log(query)
+	query = eval('(' + query + ')') ;
+	console.log(query)
+	projection = eval('(' + decodeURIComponent(projection) + ')') ;
+
+   // check safe & consistant
+
+   storer.get(table, query, projection, function(err, time, items){
+	   if(!err) callback(200, time, items);
+	   else callback(500, time, err);
+   });
+}
+
 exports.validate = validate ;
+exports.get = get ;
