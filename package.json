@@ -1,0 +1,32 @@
+{
+  "name": "rss-intelligence",
+  "version": "0.1.0",
+  "description": "lecteur et indexeur de flux RSS. Thomas Cadic & Nicolas Bloyet",
+  "main": "dev/app.js",
+  "dependencies": {
+    "body-parser": "^1.14.1",
+    "languagedetect": "^1.1.1",
+    "line-reader": "^0.2.4",
+    "md5": "^2.0.0",
+    "express": "^4.13.3",
+    "mongodb": "^2.0.45",
+    "feed-read": "^0.0.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thomascadic/RSS-Intelligence.git"
+  },
+  "keywords": [
+    "RSS"
+  ],
+  "author": "Thomas Cadic / Nicolas Bloyet",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/thomascadic/RSS-Intelligence/issues"
+  },
+  "homepage": "https://github.com/thomascadic/RSS-Intelligence#readme"
+}
