@@ -7,7 +7,7 @@
  */
 
 var rest = require('./rest/rest'),
-    provider = require('./reader/provider');;
+    provider = require('./reader/provider');
 
 var auto = true ;
 
@@ -19,4 +19,9 @@ if(auto){
 
         provider.readFile('../data/flux.txt');
     }, 1000) ;  // laisse le temps à la dbb de s'initialiser
+
+	/*setInterval(function(){
+
+        provider.readFile('../data/flux.txt');
+    }, 1000) ;  // laisse le temps à la dbb de s'initialiser*/
 }
