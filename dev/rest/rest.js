@@ -49,7 +49,9 @@ api.get('/data/articles', function(req, res) {
 	console.log("GET "+req.originalUrl);
 	_id = req.params.id ;
 	table = "RSS" ;
-    query = "{_id : ObjectId("+'"'+_id+'"'+")}" ;
+    //query = "{_id : ObjectId("+'"'+_id+'"'+")}" ; // md5 != ObjectID
+	query = "{_id : "+_id+"}" ;
+	
 
 	res.setHeader('Content-Type', 'application/json');
 

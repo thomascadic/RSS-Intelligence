@@ -7,7 +7,7 @@
 
 var md5 = require('md5'),
 	detector = new (require('languagedetect')),
-	ObjectId = require('mongodb').ObjectID,
+	//ObjectId = require('mongodb').ObjectID,
 	storer = require("../storer/storer");
 
 var PROBA_MINI = 0.4,	// probabilité minimum pour indiquer une langue
@@ -80,12 +80,12 @@ var validate = function(articles, callback){
 		});
 	}
 }
-
+//55f9c82e4c5a636101ae4e5b
+//78e731027d8fd50ed642340b7c9a63b3
 get = function(table, query, projection, callback){
 
-console.log(query)
 	query = eval('(' + query + ')') ;
-	console.log(query)
+	//console.log(query)
 	projection = eval('(' + decodeURIComponent(projection) + ')') ;
 
    // check safe & consistant
