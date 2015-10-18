@@ -3,15 +3,18 @@
 /**
 *	Récupère des liens de flux RSS à parcourir
 *	Soit en les lisant dans un fichier
-*	soit par REST
+*	Soit par REST
+*
+*	Les prépare et les met en forme pour le reader
 *
 */
 
 var reader = require("./reader"),
-	bodyParser = require('body-parser'),
-	lineReader = require('line-reader');
+	lineReader = require('line-reader'),
+	fs = require('fs');
 
 var rest = require('../rest/rest'),
+	stats = require('../controller/stats'),
 	api = rest.api ;
 
 var verbose = true ;
@@ -20,8 +23,8 @@ var verbose = true ;
  *	debug message
  */
 function trace(msg){
-
-	if(verbose) console.log("[provider.js] "+msg) ;
+	msg = JSON.stringify(msg) ;
+	if(verbose) console.log("[provider.js] :\t"+msg) ;
 }
 
 function error(msg){
@@ -41,22 +44,9 @@ function error(msg){
  api.post('/fetch', function(req, res) {
  	console.log("POST "+req.originalUrl);
 	lines = JSON.stringify(req.body) ;
-	lines = lines.split("\n") ;
+	lines = lines.split("\\n") ;
 
-	res.setHeader('Content-Type', 'application/json');
-	result = { action:"fetch url list", done:[], fail:[]} ;
-
-	n = 0 ;
-	for(i in lines){
-		reader.fetch(lines[i], function(err){
-
-			if(err) result.fail.push({ line:lines[i], error:err}) ;
-			else result.done.push(lines[i]) ;
-
-			n++ ;
-			if (n == lines.length) 	res.json(result) ;
-		}) ;
-	}
+	treat(lines, res);
 }) ;
 
 /**
@@ -65,30 +55,56 @@ function error(msg){
 api.post('/fetch/:url', function(req, res) {
    console.log("POST "+req.originalUrl);
    line =  req.params.url;
+   lines = [line] ;
 
-   res.setHeader('Content-Type', 'application/json');
-   result = { action:"fetch single url", done:[], fail:[]} ;
-
-	reader.fetch(line, function(err){
-
-		   if(err) result.fail.push({ line:line, error:err}) ;
-		   else result.done.push(line) ;
-
-		  res.json(result) ;
-	}) ;
+   treat(lines, res) ;
 });
+
+function treat(lines, res){
+
+	if(res) res.setHeader('Content-Type', 'application/json');
+	result = { action:"fetch URLs", done:[], fail:[]} ;
+
+	n = 0 ;
+	for(i in lines){
+		var line = lines[i] ;
+		trace(line) ;
+		reader.fetch(lines[i], function(url, results){
+
+			if(results.done == false) result.fail.push({ url : url, result : results}) ;
+			else{
+				result.done.push({url : url, result : results}) ;
+				stats.studyFrequencyMAJ(url, results) ; // affinage statistique à partir des données recoltées
+				// démarrage daemon ?
+			}
+
+			n++ ;
+			if (n == lines.length){
+				if(res) res.json(result) ;
+				else trace(result) ;
+			}
+		}) ;
+	}
+}
+
+function startDaemon(url){
+
+
+}
 
 /**
  *	Lit un fichier qui contient une url par ligne
  */
 var readFile = function(path){
 
-	lineReader.eachLine(path, function(line) {
+	/*lineReader.eachLine(path, function(line) {
 		trace(" read line : "+line) ;
 		reader.fetch(line, function(results){
 			console.log(results) ;
 		}) ;
-	}) ;
+	}) ;*/
+	var lines = fs.readFileSync(path).toString().split("\n");
+	treat(lines, null);
 	trace("File read") ;
 }
 

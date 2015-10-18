@@ -4,6 +4,8 @@
  *
  *  Lance le serveur HTTP
  *  Eventuellement, va lire le fichier du repertoire /data automatiquement
+ *
+ *  Demarre la fonction main, qui va initier les visites des flux à intervalle personnalisés
  */
 
 var rest = require('./rest/rest'),
@@ -24,4 +26,14 @@ if(auto){
 
         provider.readFile('../data/flux.txt');
     }, 1000) ;  // laisse le temps à la dbb de s'initialiser*/
+}
+
+function main(){
+
+	// on va chercher dans la table les url connues a ce moment
+
+	// traitement de la ligne
+
+	// set Timeout avec nouvelle valeur
+
 }

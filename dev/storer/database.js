@@ -26,7 +26,7 @@
 		very_verbose = false,	// affiche les resultats
 		bench = true ;			// mesure le temps de recherche
 
-	var pool = 15 ; 			// taille du pool de connexions en ecriture
+	var pool = 30 ; 			// taille du pool de connexions en ecriture
 
 
 	// PRIVATE

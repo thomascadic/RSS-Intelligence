@@ -13,7 +13,7 @@ var verbose = true ;
 
 function trace(msg){
 
-	if(verbose) console.log("[reader.js] "+msg) ;
+	if(verbose) console.log("[reader.js] : \t"+msg) ;
 }
 
 function error(msg){
@@ -33,14 +33,15 @@ var fetch = function(url, callback){
 	feed(url, function(err, articles) {
 	  if (err){
 		  error(err) ;
-		  callback(err) ;
+		  callback(url, { done : false, error : err }) ;
 	  }
 	  else checker.validate(articles, function(results){
+		  //results.url = url ;
 		  if(results.done == true){
 			  trace("[fetch] "+url+" -> "+results.new.length+" new articles, "+results.old.length+" old articles") ;
 		  }else error(results.error);
 
-		  callback(results) ;
+		  callback(url, results) ;
 	  });
 	});
 }

@@ -6,6 +6,7 @@
  */
 
 var express = require('express'),
+	bodyParser = require('body-parser'),
     checker = require('../controller/checker');
 var api = express();
 
@@ -16,7 +17,8 @@ api.all('/*', function(req, res, next) {
 	res.header("Cache-Control", "no-cache") ;
 	next();
 })
-.use(express.static(__dirname + '/files')) ; // sert des fichiers, si besoin (interface par ex)
+.use(express.static(__dirname + '/files')) // sert des fichiers, si besoin (interface par ex)
+.use(bodyParser.text()) ;
 
 api.get('/data/articles', function(req, res) {
 	console.log("GET "+req.originalUrl);
@@ -49,7 +51,6 @@ api.get('/data/articles', function(req, res) {
 	console.log("GET "+req.originalUrl);
 	_id = req.params.id ;
 	table = "RSS" ;
-    //query = "{_id : ObjectId("+'"'+_id+'"'+")}" ; // md5 != ObjectID
 	query = "{_id : "+'"'+_id+'"'+"}" ;
 
 
