@@ -64,7 +64,7 @@ function guessLanguage(text){
  */
 var validate = function(articles, callback){
 
-	//console.log(articles) ;
+	var new_articles = [], old_articles = [], n= 0 ;
 
 	for(i in articles){
 
@@ -76,16 +76,21 @@ var validate = function(articles, callback){
 
 		// stockage
 		storer.store(id, article, function(err){
-			callback(err) ;
+			if(!err) new_articles.push(article.title) ;
+			else if(err.code == 11000) old_articles.push(article.title) ;
+			else{
+				console.error(err);
+				callback({done : false , error : err}) ;
+			}
+			n++ ;
+			if(n == articles.length) callback({done : true, new: new_articles, old: old_articles}) ;
 		});
 	}
 }
-//55f9c82e4c5a636101ae4e5b
-//78e731027d8fd50ed642340b7c9a63b3
+
 get = function(table, query, projection, callback){
 
 	query = eval('(' + query + ')') ;
-	//console.log(query)
 	projection = eval('(' + decodeURIComponent(projection) + ')') ;
 
    // check safe & consistant

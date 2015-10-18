@@ -22,7 +22,7 @@
 
 	var debug = false,			// scenario type
 		toFill = false,			// remplit la base de données aléatoires
-		verbose = true,			// détaille les operations
+		verbose = false,			// détaille les operations
 		very_verbose = false,	// affiche les resultats
 		bench = true ;			// mesure le temps de recherche
 
@@ -151,7 +151,9 @@
 		var collection = db_write.collection(table);
 
 		collection.insert(tuple, function(err, result) {
-			trace("[insert] "+JSON.stringify(tuple)+" -> "+table);
+			if(very_verbose)trace("[insert] "+JSON.stringify(tuple)+" -> "+table);
+			else trace("[insert] -> "+table) ;
+
 			callback(err) ;
 		});
 	}

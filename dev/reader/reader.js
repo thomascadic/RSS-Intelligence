@@ -35,8 +35,12 @@ var fetch = function(url, callback){
 		  error(err) ;
 		  callback(err) ;
 	  }
-	  else checker.validate(articles, function(err){
-		   callback(err) ;
+	  else checker.validate(articles, function(results){
+		  if(results.done == true){
+			  trace("[fetch] "+url+" -> "+results.new.length+" new articles, "+results.old.length+" old articles") ;
+		  }else error(results.error);
+
+		  callback(results) ;
 	  });
 	});
 }

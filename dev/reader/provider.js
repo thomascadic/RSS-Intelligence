@@ -85,8 +85,8 @@ var readFile = function(path){
 
 	lineReader.eachLine(path, function(line) {
 		trace(" read line : "+line) ;
-		reader.fetch(line, function(err){
-			if (err) error(err) ;
+		reader.fetch(line, function(results){
+			console.log(results) ;
 		}) ;
 	}) ;
 	trace("File read") ;

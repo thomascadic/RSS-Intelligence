@@ -1,6 +1,6 @@
 http://www.france24.com/en/timeline/rss
 http://rss.cnn.com/rss/edition_world.rss
-http://www.abc.net.au/news/feed/52278/rss.xml 
+http://www.abc.net.au/news/feed/52278/rss.xml
 http://feeds.washingtonpost.com/rss/world
 http://feeds.latimes.com/latimes/news/nationworld/world
 http://www.aljazeera.com/Services/Rss/?PostingId=2007731105943979989

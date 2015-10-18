@@ -12,7 +12,7 @@ var database = require('./database');
 
 var table = "RSS";
 
-var verbose = true;
+var verbose = false;
 
 /**
  * debug
@@ -36,7 +36,9 @@ var store = function(id, article, callback){
 			trace("File stored.") ;
 			callback(null) ;
 		}else{
-			error(err) ;
+			if (err.code == 11000) trace("article already stored") ;
+			else error(err) ;
+
 			callback(err) ;
 		}
 	});
