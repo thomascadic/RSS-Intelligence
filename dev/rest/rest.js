@@ -47,12 +47,38 @@ api.get('/data/articles', function(req, res) {
 		}
 	});
 })
+api.get('/data/:table', function(req, res) {
+	console.log("GET "+req.originalUrl);
+	table = req.params.table;
+	query = "{}";
+	projection = "{}";
+	res.setHeader('Content-Type', 'application/json');
+
+	checker.get(table, query, projection, function(status, time, data){
+
+		if(status == 200){
+			var result = {
+				"query" : 'find '+query+" --> "+table,
+				"count" : data.length,
+				"time"	: time+"ms",
+				"data" 	: data
+			};
+		res.json(result);
+		}else{
+            var result = {
+				"query" : 'find '+query+" --> "+table,
+				"time"	: time+"ms",
+				"error" 	: data
+			};
+			res.json(result);
+		}
+	});
+})
 .get('/element/article/:id', function(req, res) {
 	console.log("GET "+req.originalUrl);
 	_id = req.params.id ;
 	table = "RSS" ;
 	query = "{_id : "+'"'+_id+'"'+"}" ;
-
 
 	res.setHeader('Content-Type', 'application/json');
 
@@ -70,6 +96,51 @@ api.get('/data/articles', function(req, res) {
 			res.json(null);
 		}
 	});
-}) ;
+})
+.delete('/data/:table', function(req, res) {
+        console.log("DELETE "+req.originalUrl);
+        table = req.params.table;
+        tuple = ( typeof req.query.tpl != 'undefined' && req.query.tpl) ? req.query.tpl : "{}";
+        res.setHeader('Content-Type', 'application/json');
+
+        if(tuple != "{}"){
+                checker.del(table, tuple, function(status, err, data){
+
+                        if(status == 200){
+                                var result = {
+                                        "query" : 'delete '+tuple+" from "+table,
+                                        "status": true,
+                                        "info"  : data
+                                };
+                        }else{
+                                var result = {
+                                        "query" : 'delete '+tuple+" from "+table,
+                                        "status": false,
+                                        "info"  : err
+                                };
+                        }
+                        res.json(result) ;
+                });
+        }else{  // purge la table
+
+                checker.drop(table, function(status, err, data){
+
+                        if(status == 200){
+                                var result = {
+                                        "query" : 'drop '+table,
+                                        "status": true,
+                                        "info"  : data
+                                };
+                        }else{
+                                var result = {
+                                        "query" : 'drop '+table,
+                                        "status": false,
+                                        "info"  : err
+                                }
+                        }
+                        res.json(result) ;
+                });
+        }
+});
 
 exports.api = api ;

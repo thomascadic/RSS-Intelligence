@@ -56,6 +56,21 @@ var store = function(table, item, callback){
 	});
 }
 
+var	update = function(table, query, replace, callback){
+
+	database.update(table, query, replace, function(err){
+
+		if (!err) {
+			trace("Data updated.");
+			callback(null) ;
+		}else{
+			error(err) ;
+			callback(err) ;
+		}
+	});
+}
+
+
 var get = function(table, query, projection, callback){
 
    database.find(table, query, projection, function(err, time, items){
@@ -64,6 +79,41 @@ var get = function(table, query, projection, callback){
    });
 }
 
+del = function(table, tuple, callback){
+
+        tuple = eval('(' + decodeURIComponent(tuple)+ ')') ;
+
+        // check safe
+
+        database.remove(table, tuple, function(err, result){
+
+			if (!err) {
+				trace("Data removed.");
+				callback(null, result) ;
+			}else{
+				error(err) ;
+				callback(err, result) ;
+			}
+        });
+ }
+
+ drop = function(table, callback){
+
+        database.drop(table, function(err, result){
+
+			if (!err) {
+				trace("Data dropped.");
+				callback(null, result) ;
+			}else{
+				error(err) ;
+				callback(err, result) ;
+			}
+        });
+ }
+
 exports.store = store ;
 exports.storeArticle = storeArticle ;
 exports.get = get ;
+exports.update = update ;
+exports.drop = drop ;
+exports.del = del ;

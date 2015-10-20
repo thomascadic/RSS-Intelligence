@@ -111,5 +111,29 @@ get = function(table, query, projection, callback){
    });
 }
 
+del = function(table, tuple, callback){
+
+        tuple = eval('(' + decodeURIComponent(tuple)+ ')') ;
+
+        // check safe
+
+        storer.remove(table, tuple, function(err, result){
+
+                if(!err) callback(200, null, result);
+                else callback(500, err, result);
+        });
+ }
+
+ drop = function(table, callback){
+
+        storer.drop(table, function(err, result){
+
+                if(!err) callback(200, null, result);
+                else callback(500, err, result);
+        });
+ }
+
 exports.validate = validate ;
 exports.get = get ;
+exports.del = del ;
+exports.drop = drop ;
