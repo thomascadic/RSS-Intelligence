@@ -8,7 +8,11 @@
 var md5 = require('md5'),
 	detector = new (require('languagedetect')),
 	//ObjectId = require('mongodb').ObjectID,
-	storer = require("../storer/storer");
+	storer = require("../storer/storer"),
+	htmlToText = require('html-to-text'),
+	mime = require('mime');
+
+	//mime.default_type = 'text/plain';
 
 var PROBA_MINI = 0.35,	// probabilité minimum pour indiquer une langue
 	STEP_MINI = 0.05 ;	// ecart a partir duquel on inclut la langue suivante
@@ -70,6 +74,7 @@ function guessLanguage(text){
  * "published" - The date that the article was published (Date).
  * "feed"      - {name, source, link}
  * "language"  - The language(s) guessed (Array of Sting)
+ * "mimetype"  - Content's MIME-Type
  */
 var validate = function(articles, callback){
 
@@ -82,6 +87,17 @@ var validate = function(articles, callback){
 		article.language = guessLanguage(article.title) ;
 		id = md5(article.title) ;
 		trace(id+" -> "+article.title) ;
+
+		// Content cleaning (html to text)
+		// Set to ignore all images
+		var text = htmlToText.fromString(article.content, {
+    	wordwrap: false,
+			ignoreImage: true
+		});
+		article.content = text;
+
+		// MIME-Type detection
+		article.mimetype = mime.lookup(article.content);
 
 		// stockage
 		storer.storeArticle(id, article, function(err, title){ // nécéssité de recuperer le titre, car variable réécrite depuis
