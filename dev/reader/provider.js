@@ -17,7 +17,7 @@ var rest = require('../rest/rest'),
 	stats = require('../controller/stats'),
 	api = rest.api ;
 
-var verbose = true ;
+var verbose = false ;
 
 /**
  *	debug message
@@ -43,22 +43,13 @@ function error(msg){
  */
  api.post('/fetch', function(req, res) {
  	console.log("POST "+req.originalUrl);
-	lines = JSON.stringify(req.body) ;
-	lines = lines.split("\\n") ;
+	lines = req.body ;
+	console.log("request content : ")
+	console.log(lines)
+	lines = lines.split(/(\r\n|\n|\r)/gm) ;
 
 	treat(lines, res);
 }) ;
-
-/**
- *	Parcourt une seule url pointant vers un flux RSS
- */
-api.post('/fetch/:url', function(req, res) {
-   console.log("POST "+req.originalUrl);
-   line =  req.params.url;
-   lines = [line] ;
-
-   treat(lines, res) ;
-});
 
 function treat(lines, res){
 
@@ -85,11 +76,6 @@ function treat(lines, res){
 			}
 		}) ;
 	}
-}
-
-function startDaemon(url){
-
-
 }
 
 /**

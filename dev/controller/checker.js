@@ -14,7 +14,7 @@ var md5 = require('md5'),
 
 	//mime.default_type = 'text/plain';
 
-var PROBA_MINI = 0.35,	// probabilité minimum pour indiquer une langue
+var PROBA_MINI = 0.25,	// probabilité minimum pour indiquer une langue
 	STEP_MINI = 0.05 ;	// ecart a partir duquel on inclut la langue suivante
 
 var verbose = true ;
@@ -84,17 +84,22 @@ var validate = function(articles, callback){
 
 		article = articles[i] ;
 		//if(verbose) console.log(article) ;
-		article.language = guessLanguage(article.title) ;
-		id = md5(article.title) ;
-		trace(id+" -> "+article.title) ;
 
 		// Content cleaning (html to text)
 		// Set to ignore all images
 		var text = htmlToText.fromString(article.content, {
-    	wordwrap: false,
-			ignoreImage: true
+    		wordwrap: false,
+			ignoreImage: true,
+			ignoreHref : true
 		});
 		article.content = text;
+
+		if(article.content.length > article.title.length){
+			article.language = guessLanguage(article.content) ;
+		}else article.language = guessLanguage(article.title) ;
+
+		id = md5(article.title) ;
+		trace(id+" -> "+article.title) ;
 
 		// MIME-Type detection
 		article.mimetype = mime.lookup(article.content);

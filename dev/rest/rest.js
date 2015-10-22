@@ -50,7 +50,9 @@ api.get('/data/articles', function(req, res) {
 api.get('/data/:table', function(req, res) {
 	console.log("GET "+req.originalUrl);
 	table = req.params.table;
-	query = "{}";
+	query = (req.query.query) ? decodeURIComponent(req.query.query) :  "{}";
+	console.log("query : ");
+	console.log(query);
 	projection = "{}";
 	res.setHeader('Content-Type', 'application/json');
 
