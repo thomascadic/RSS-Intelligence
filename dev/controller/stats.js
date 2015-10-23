@@ -42,13 +42,13 @@ var studyFrequencyMAJ = function(url, stats){
 			if(freq > 3600 * 48) freq = 3600 * 48 ;
 
 			console.log("f : "+freq) ;
-			storer.update("MAJ", {_id : id}, {lastEpoch : (new Date).getTime(), freq : freq}, function(res){ // on stocke le taux de renuovellement entre deux visites
+			storer.update("MAJ", {_id : id}, {lastEpoch : (new Date).getTime(), freq : freq, lastRefresh : percentNew+"%"}, function(res){ // on stocke le taux de renuovellement entre deux visites
 				trace("Mise à jour de l'URL") ;
 			}) ;
 
 		}else{	// cette url est nouvelle, on la stocke
 			console.log("URL inconnue : "+url);
-			storer.store("MAJ", {_id : id, url : url, lastEpoch : (new Date).getTime(), freq : 36}, function(res){ // par défaut, on attend une heure
+			storer.store("MAJ", {_id : id, url : url, lastEpoch : (new Date).getTime(), freq : 3600}, function(res){ // par défaut, on attend une heure
 				trace("URL entrée dans la table") ;
 			}) ;
 		}
