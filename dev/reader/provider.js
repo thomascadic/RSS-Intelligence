@@ -1,12 +1,12 @@
-/* provider.js */
-
 /**
+*	provider.js
+*	===========
+*
 *	Récupère des liens de flux RSS à parcourir
 *	Soit en les lisant dans un fichier
 *	Soit par REST
 *
 *	Les prépare et les met en forme pour le reader
-*
 */
 
 var reader = require("./reader"),
@@ -51,6 +51,11 @@ function error(msg){
 	treat(lines, res);
 }) ;
 
+/**
+ *	Lance le traitement sur un tableau de lignes
+ *	lines - (array of String)
+ *	res - HTTP response (express object)
+ */
 function treat(lines, res){
 
 	if(res) res.setHeader('Content-Type', 'application/json');
@@ -66,7 +71,6 @@ function treat(lines, res){
 			else{
 				result.done.push({url : url, result : results}) ;
 				stats.studyFrequencyMAJ(url, results) ; // affinage statistique à partir des données recoltées
-				// démarrage daemon ?
 			}
 
 			n++ ;
@@ -74,21 +78,16 @@ function treat(lines, res){
 				if(res) res.json(result) ;
 				else trace(result) ;
 			}
-		}) ;
+		});
 	}
 }
 
 /**
  *	Lit un fichier qui contient une url par ligne
+ *	- path (String)
  */
 var readFile = function(path){
 
-	/*lineReader.eachLine(path, function(line) {
-		trace(" read line : "+line) ;
-		reader.fetch(line, function(results){
-			console.log(results) ;
-		}) ;
-	}) ;*/
 	var lines = fs.readFileSync(path).toString().split("\n");
 	treat(lines, null);
 	trace("File read") ;

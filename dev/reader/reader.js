@@ -1,6 +1,7 @@
-/* reader.js */
-
 /**
+*	reader.js
+* 	==========
+*
 *	Lit un flux RSS à partir de son url
 *	puis la transmet au package controller
 */

@@ -1,8 +1,27 @@
 /**
+ *	rest.js
+ *	========
+ *
  *  Initialise une version minimale d'express
  *
  *  L'application est exportée, de façon a ce que les autres modules puissent
  *  ajouter des routes de façon souple.
+ *
+ *	Les routes disponibles sont, avec @ = ipv4:port du support sur lequel
+ *	l'application est dépoyée (127.0.0.1:8080 ou 149.202.45.67:8080)
+ *
+ *	GET :
+ *		@/data/articles 	(articles produits)
+ *		@/data/$table?(query={xxx})	(envoie la requete correspondante à la BDD)
+ *		@/data/element/article/$id	(recupère un artice, connaissant son id)
+ *
+ * 	POST :
+ *		@/fetch 	parcourt la liste d'url passée dans le corps de la requete
+ *
+ *	DELETE :
+ *		@/data/$table	efface la table
+ *
+ * 	astuce : utiliser l'application chrome "POSTMAN" pour manipuler très facilement les requetes HTTP
  */
 
 var express = require('express'),

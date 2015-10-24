@@ -1,5 +1,6 @@
 /* storer.js
  * ==========
+ *
  * Couche d'abstraction entre le controller et les I/O sur le disque
  *
  * Ce module reçoit les demandes d'écritures/lectures en provenance du controleur,
@@ -23,6 +24,12 @@ function error(msg){
 	console.error("[storer.js] " + msg);
 }
 
+/**
+ *	Raccourci de stockage vers la table "RSS"
+ *
+ *	Gestion silencieuse de l'erreur de clé multiple, qui est dans ce cas courante,
+ *	vu qu'on va en toute logique essayer d'insérer plusieurs fois un article au cours de sa vie
+ */
 var storeArticle = function(id, article, callback){
 	trace(id + " -> " + article);
 
@@ -42,6 +49,10 @@ var storeArticle = function(id, article, callback){
 	});
 }
 
+/**
+ *	Stocke l'objet item dans la table
+ *  cf database.js
+ */
 var store = function(table, item, callback){
 
 	database.insert(table, item, function(err){
@@ -56,6 +67,10 @@ var store = function(table, item, callback){
 	});
 }
 
+/**
+ *	Mise à jour d'un objet existant
+ *	cf database.js
+ */
 var	update = function(table, query, replace, callback){
 
 	database.update(table, query, replace, function(err){
@@ -69,7 +84,6 @@ var	update = function(table, query, replace, callback){
 		}
 	});
 }
-
 
 var get = function(table, query, projection, callback){
 

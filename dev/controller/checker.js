@@ -1,13 +1,14 @@
-/* checker.js */
-
 /**
-*	Reçoit des objets js qui contiennent les données d'un flux RSS
-*	les analyse, et les rejette/écrit sur le disque selon le cas
+*	checker.js
+*	==========
+*
+*	Interface entre la couche de récupération de données,
+*	et le package chargé de leur écriture.
+*	Un ensemble d'analyses/modifications est donc opéré ici
 */
 
 var md5 = require('md5'),
 	detector = new (require('languagedetect')),
-	//ObjectId = require('mongodb').ObjectID,
 	storer = require("../storer/storer"),
 	htmlToText = require('html-to-text'),
 	mime = require('mime');
@@ -41,6 +42,8 @@ function guessLanguage(text){
 		else return "unknown" ;
 	}else return "unknown" ;
 	/*
+	// premiere version, en etudiant les ecarts entre deux entrées
+	// problème : les proba données sont assez aléatoires, et cela marche donc assez mal...
 	if(languages){
 		var guesses = [],
 			proba_n = 1 ;
@@ -119,6 +122,13 @@ var validate = function(articles, callback){
 	}
 }
 
+	/// Note : les trois fonctions ne font rien de spécial à cet instant,
+	///		   mais pourraient éventuellement analyser les requetes pour répondre
+	///		   à certaines exigences (sécurité, timing, etc...)
+
+/**
+ *	Analyse, et transmet au besoin, les requetes de type 'get' au package de stockage des données
+ */
 get = function(table, query, projection, callback){
 
 	query = eval('(' + query + ')') ;
@@ -132,6 +142,9 @@ get = function(table, query, projection, callback){
    });
 }
 
+/**
+ *	Analyse, et transmet au besoin, les requetes de type 'delete' au package de stockage des données
+ */
 del = function(table, tuple, callback){
 
         tuple = eval('(' + decodeURIComponent(tuple)+ ')') ;
@@ -145,6 +158,9 @@ del = function(table, tuple, callback){
         });
  }
 
+ /**
+  *	Analyse, et transmet au besoin, les requetes de type 'drop' au package de stockage des données
+  */
  drop = function(table, callback){
 
         storer.drop(table, function(err, result){

@@ -1,5 +1,7 @@
-
 /**
+ *	app.js
+ *	=======`
+ *`
  *	Fichier de démarrage de l'application
  *
  *  Lance le serveur HTTP
