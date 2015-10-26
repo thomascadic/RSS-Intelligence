@@ -1,8 +1,11 @@
+________________________________________________________________________________
+
   ___  ___  ___         ___       _         _  _  _                           
- | _ \/ __|/ __|  ___  |_ _| _ _ | |_  ___ | || |(_) __ _  ___  _ _   __  ___ 
+ | _ \/ __|/ __|  ___  |_ _| _ _ | |_  ___ | || |(_) __ _  ___  _ _   __  ___
  |   /\__ \\__ \ |___|  | | | ' \|  _|/ -_)| || || |/ _` |/ -_)| ' \ / _|/ -_)
  |_|_\|___/|___/       |___||_||_|\__|\___||_||_||_|\__, |\___||_||_|\__|\___|
                                                     |___/                     
+________________________________________________________________________________
 
  Bloyet Nicolas
  Cadic 	Thomas
@@ -29,35 +32,35 @@ Il nous a donc semblé pertinent d'utiliser ces deux technologies conjointement.
 Il vous est possible soit d'installer le programme sur votre ordinateur, soit de consulter une version
 que nous avons préalablement déployé sur un serveur et qui s'execute depuis quelques temps.
 
-	## Sur le localhost
+## Sur le localhost
 
-	Pour executer notre programme sur votre ordinateur, il vous faudra au préalable installer les programmes évoqués ci-dessus.
+Pour executer notre programme sur votre ordinateur, il vous faudra au préalable installer les programmes évoqués ci-dessus.
 
-		### node.js
+### node.js
 
-		Pour installer node.js, rendez vous à la page suivante, et suivez les instructions suivant votre configuration
-		https://nodejs.org/en/download/
+Pour installer node.js, rendez vous à la page suivante, et suivez les instructions suivant votre configuration
+https://nodejs.org/en/download/
 
-		### MongoDB
+### MongoDB
 
-		Pour installer MongoDB, là encore rendez vous sur la page suivante, suivant votre configuration
+Pour installer MongoDB, là encore rendez vous sur la page suivante, suivant votre configuration
 
-		Linux : https://docs.mongodb.org/master/administration/install-on-linux/
-		MacOS : https://docs.mongodb.org/master/tutorial/install-mongodb-on-os-x/
-		Windows https://docs.mongodb.org/master/tutorial/install-mongodb-on-windows/
+Linux : https://docs.mongodb.org/master/administration/install-on-linux/
+MacOS : https://docs.mongodb.org/master/tutorial/install-mongodb-on-os-x/
+Windows https://docs.mongodb.org/master/tutorial/install-mongodb-on-windows/
 
-		### rss-intelligence
+### rss-intelligence
 
-		Vous pourrez alors executer RSS-Intelligence, en vous rendant dans ./bin, et en éxécutant run.sh 
-		(à adapter si vous utilisez Windows)
-		Suivant votre système, certains droits d'éxécution peuvent être nécéssaires (notamment pour MongoDB)
+Vous pourrez alors executer RSS-Intelligence, en vous rendant dans ./bin, et en éxécutant run.sh
+(à adapter si vous utilisez Windows)
+Suivant votre système, certains droits d'éxécution peuvent être nécéssaires (notamment pour MongoDB)
 
-	## Sur serveur distant
+## Sur serveur distant
 
-	Vous avez aussi la possibilité de consulter les sorties du programme que nous avons préalablement déployé
-	sur un serveur distant, et qui tourne depuis quelques jours.
-	Ainsi, vous pourrez avoir un exemple de bilan des parcours automatiques de flux.
-	Ce programme en ligne est accessible sur :	149.202.45.67:8080
+Vous avez aussi la possibilité de consulter les sorties du programme que nous avons préalablement déployé
+sur un serveur distant, et qui tourne depuis quelques jours.
+Ainsi, vous pourrez avoir un exemple de bilan des parcours automatiques de flux.
+Ce programme en ligne est accessible sur :	http://149.202.45.67:8080
 
 # Execution
 
@@ -66,46 +69,45 @@ En effet, pour rester dans l'esprit d'un programme WEB dont nous n'avons pas for
 nous l'avons doté d'une API de type REST rudimentaire, qui vous permet d'avoir un résultat présentable
 des données indexées (extraites d'une base de données).
 
-	## Méthodes
+## Méthodes
 
-	Soit @, ipv4:port du programme, c'est à dire 127.0.0.1:8080 ou 149.202.45.67:8080
+Soit @, ipv4:port du programme, c'est à dire 127.0.0.1:8080 ou 149.202.45.67:8080
 
-		GET
-		@/data/articles 			(articles indexés)
+GET
+	@/data/articles 			(articles indexés)
 
-		@/data/$table?(query={xxx})	(envoie la requete correspondante à la BDD)
+	@/data/$table?(query={xxx})	(envoie la requete correspondante à la BDD)
 									query optionnel
 									table : RSS ou MAJ
 
- 		@/data/element/article/$id	(recupère un artice, connaissant son id)
- 
-	  	POST
-	 		@/fetch 	parcourt la liste d'url passée dans le corps de la requete
-	 
-	 	DELETE
-	 		@/data/$table	efface la table
+ 	@/data/element/article/$id	(recupère un artice, connaissant son id)
 
-	## Postman
+POST
+	@/fetch 	parcourt la liste d'url passée dans le corps de la requete
 
-	Postman est une application s'éxécutant sur le navigateur Google Chrome ou Chromium, et qui permet d'envoyer
-	très facilement des requetes HTTP, et de voir leur résultat directement coloré et indenté.
-	C'est un outil très pratique, dont nous vous recommandons l'utilisation.
+DELETE
+	@/data/$table	efface la table
 
-	## cURL
+## Postman
 
-	Il est bien entendu possible d'envoyer des requetes HTTP de la façon que vous préférez, avec le programme cURL par exemple,
-	disponible sur les sytèmes UNIX.
+Postman est une application s'éxécutant sur le navigateur Google Chrome ou Chromium, et qui permet d'envoyer
+très facilement des requetes HTTP, et de voir leur résultat directement coloré et indenté.
+C'est un outil très pratique, dont nous vous recommandons l'utilisation.
 
-	exemple : 
-		articles indexés :
-		curl -i -H "Accept: application/json" GET http://149.202.45.67:8080/data/RSS 	
+## cURL
 
-		données concernant la mise a jour des flux
-		curl -i -H "Accept: application/json" GET http://149.202.45.67:8080/data/MAJ
+Il est bien entendu possible d'envoyer des requetes HTTP de la façon que vous préférez, avec le programme cURL par exemple,
+disponible sur les sytèmes UNIX.
 
-		parcourir un nouveau flux	
-		curl -H "Content-Type: application/json" -X POST -d 'http://rss.lapresse.ca/179.xml' http://149.202.45.67:8080/fetch
+exemple :
+	articles indexés :
+	curl -i -H "Accept: application/json" GET http://149.202.45.67:8080/data/RSS 	
 
+	données concernant la mise a jour des flux
+	curl -i -H "Accept: application/json" GET http://149.202.45.67:8080/data/MAJ
+
+	parcourir un nouveau flux
+	curl -H "Content-Type: application/json" -X POST -d 'http://rss.lapresse.ca/179.xml' http://149.202.45.67:8080/fetch
 
 # Credits
 

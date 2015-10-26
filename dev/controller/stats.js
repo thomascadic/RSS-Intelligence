@@ -54,9 +54,11 @@ var studyFrequencyMAJ = function(url, stats){
 			var t = Math.round(((new Date).getTime() - res.lastEpoch)/1000.0) ;
 			trace("Dernière visite il y a "+t+"s");
 			var freq = res.freq ;
-			if(percentNew == 0 ){
-				freq *= 2 ;	// evitons les divisions par zero
-			}else freq = (75*t)/percentNew;
+			if(percentNew == 0 ){ 		// evitons les divisions par zero
+				freq *= 2 ;
+			}if(percentNew == 100 ){ 	// on a perdu de l'information, on divise le prochain temps par deux
+				freq /= 2 ;
+			}else freq = (75*t)/percentNew;	// sinon on estime le temps pour parvenir à 75%
 
 			if(freq > (3600 * 48)) freq = 3600 * 48 ;	// on met une borne supérieure de deux jours
 			freq = Math.round(freq) ;
@@ -67,13 +69,13 @@ var studyFrequencyMAJ = function(url, stats){
 				trace("Mise à jour de l'URL") ;
 			}) ;
 
-		}else{	// cette url est nouvelle, on la stocke
+		}else{	// cette url est nouvelle, on la stocke avec une valeur defaut d'une heure
 			console.log("URL inconnue : "+url);
 			storer.store("MAJ", {_id : id, url : url, lastEpoch : (new Date).getTime(), freq : 3600}, function(res){ // par défaut, on attend une heure
 				trace("URL entrée dans la table") ;
 			}) ;
 		}
-	}) ;
+	});
 }
 
 exports.studyFrequencyMAJ = studyFrequencyMAJ ;

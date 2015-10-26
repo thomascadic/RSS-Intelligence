@@ -61,7 +61,7 @@ function treat(lines, res){
 	if(res) res.setHeader('Content-Type', 'application/json');
 	result = { action:"fetch URLs", done:[], fail:[]} ;
 
-	n = 0 ;
+	n = 0 ;	//function-scoped variable
 	for(i in lines){
 		var line = lines[i] ;
 		trace(line) ;
@@ -74,7 +74,7 @@ function treat(lines, res){
 			}
 
 			n++ ;
-			if (n == lines.length){
+			if (n == lines.length){			// reponse envoyée quand toutes les url sont traitées
 				if(res) res.json(result) ;
 				else trace(result) ;
 			}
