@@ -1,0 +1,53 @@
+---------------------------------
+   "RSS-Intelligence"
+   "FEED-Collector" sub-project
+   modules & licenses
+---------------------------------
+
+body-parser
+	Copyright © 2014 Jonathan Ong <me@jongleberry.com>
+	Copyright © 2014-2015 Douglas Christopher Wilson <doug@somethingdoug.com>
+	Licence : MIT
+	Link : https://github.com/expressjs/body-parser
+
+languagedetect
+	Copyright © 2013, Francois-Guillaume Ribreau node@fgribreau.com, Ruslan Zavackiy ruslan@zavackiy.com
+	Licence : 
+	Link : https://github.com/FGRibreau/node-language-detect
+
+line-reader
+	Copyright © 2011 Nick Ewing
+	Licence : 
+	Link : https://github.com/nickewing/line-reader
+
+md5
+	Copyright © 2011-2015, Paul Vorbach
+	Copyright © 2009, Jeff Mott
+	Licence : 
+	Link : https://github.com/pvorb/node-md5
+
+express
+	Copyright © 2009-2014 TJ Holowaychuk <tj@vision-media.ca>
+	Copyright © 2013-2014 Roman Shtylman <shtylman+expressjs@gmail.com>
+	Copyright © 2014-2015 Douglas Christopher Wilson <doug@somethingdoug.com>
+	Licence : MIT
+	Link : https://github.com/strongloop/express
+
+mongodb
+	Licence : AGPL & Apache License v2.0
+	Link : https://github.com/mongodb/mongo
+
+feed-read
+	Copyright © 2012 (https://github.com/sentientwaffle)
+	Licence : 
+	Link : https://github.com/sentientwaffle/feed-read
+
+html-to-text
+	Copyright © 2015 werk85 <legenhausen@werk85.de>
+	Licence : MIT
+	Link : https://github.com/werk85/node-html-to-text
+
+mime
+	Copyright © 2010 Benjamin Thomas, Robert Kieffer
+	Licence : MIT
+	Link : https://github.com/broofa/node-mime
