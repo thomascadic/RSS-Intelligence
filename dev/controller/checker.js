@@ -76,7 +76,7 @@ function guessLanguage(text){
  * "content"   - The HTML content of the article (String).
  * "published" - The date that the article was published (Date).
  * "feed"      - {name, source, link}
- * "language"  - The language(s) guessed (Array of Sting)
+ * "language"  - The language(s) guessed (Array of String)
  * "mimetype"  - Content's MIME-Type
  */
 var validate = function(articles, callback){
@@ -105,7 +105,7 @@ var validate = function(articles, callback){
 		trace(id+" -> "+article.title) ;
 
 		// MIME-Type detection
-		article.mimetype = mime.lookup(article.content);
+		article.mimetype = mime.lookup(article.link);
 
 		// stockage
 		storer.storeArticle(id, article, function(err, title){ // nécéssité de recuperer le titre, car variable réécrite depuis
