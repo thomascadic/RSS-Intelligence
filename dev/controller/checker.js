@@ -131,7 +131,7 @@ var validate = function(articles, callback){
  */
 get = function(table, query, projection, callback){
 
-	query = eval('(' + query + ')') ;
+	query = eval('(' + decodeURIComponent(query) + ')') ;
 	projection = eval('(' + decodeURIComponent(projection) + ')') ;
 
    // check safe & consistant

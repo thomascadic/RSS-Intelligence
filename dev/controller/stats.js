@@ -64,13 +64,12 @@ var studyFrequencyMAJ = function(url, stats){
 			freq = Math.round(freq) ;
 			var next = new Date((new Date).getTime() + (freq * 1000));
 
-			console.log("f : "+freq) ;
 			storer.update("MAJ", {_id : id}, {lastEpoch : (new Date).getTime(), freq : freq, lastRefresh : percentNew+"%", nextRefresh : next.toUTCString()}, function(res){ // on stocke le taux de renuovellement entre deux visites
 				trace("Mise à jour de l'URL") ;
 			}) ;
 
 		}else{	// cette url est nouvelle, on la stocke avec une valeur defaut d'une heure
-			console.log("URL inconnue : "+url);
+			trace("URL inconnue : "+url);
 			storer.store("MAJ", {_id : id, url : url, lastEpoch : (new Date).getTime(), freq : 3600}, function(res){ // par défaut, on attend une heure
 				trace("URL entrée dans la table") ;
 			}) ;

@@ -80,7 +80,7 @@ function daemonURL(url){
 			console.log(error);
 		}else{	// maj effectuée
 			request({
-				url: 'http://127.0.0.1:8080/data/MAJ?query={ url : \"'+url+'\"}',
+				url: 'http://127.0.0.1:8080/data/MAJ?query={\"url\":\"'+url+'\"}',
 				method: 'GET',
 				headers: {
 					'Content-Type': 'application/json'
@@ -90,6 +90,7 @@ function daemonURL(url){
 					console.log(error);
 				}else{
 					console.log("data : ");
+					console.log(data);
 					data = JSON.parse(data);
 					tab = data.data ;
 					visit(tab[0]);

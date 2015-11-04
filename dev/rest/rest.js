@@ -69,7 +69,7 @@ api.get('/data/articles', function(req, res) {
 api.get('/data/:table', function(req, res) {
 	console.log("GET "+req.originalUrl);
 	table = req.params.table;
-	query = (req.query.query) ? decodeURIComponent(req.query.query) :  "{}";
+	query = ( typeof req.query.query != 'undefined' && req.query.query) ? req.query.query : "{}";
 	console.log("query : ");
 	console.log(query);
 	projection = "{}";
@@ -84,7 +84,7 @@ api.get('/data/:table', function(req, res) {
 				"time"	: time+"ms",
 				"data" 	: data
 			};
-		res.json(result);
+			res.json(result);
 		}else{
             var result = {
 				"query" : 'find '+query+" --> "+table,
