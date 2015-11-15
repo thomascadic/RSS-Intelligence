@@ -1,3 +1,4 @@
 node_modules/*
 data/*
+dev/rest/files/bower_components/*
 npm-debug.log
