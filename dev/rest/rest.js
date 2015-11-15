@@ -121,10 +121,12 @@ api.get('/data/:table', function(req, res) {
 .delete('/data/:table', function(req, res) {
         console.log("DELETE "+req.originalUrl);
         table = req.params.table;
-        tuple = ( typeof req.query.tpl != 'undefined' && req.query.tpl) ? req.query.tpl : "{}";
+        tuple = ( typeof req.query.tpl != 'undefined' && req.query.tpl) ? "'"+req.query.tpl+"'" : "{}";
         res.setHeader('Content-Type', 'application/json');
 
         if(tuple != "{}"){
+			console.log("tuple : ")
+			console.log(tuple)
                 checker.del(table, tuple, function(status, err, data){
 
                         if(status == 200){

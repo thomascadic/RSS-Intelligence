@@ -151,7 +151,7 @@ del = function(table, tuple, callback){
 
         // check safe
 
-        storer.remove(table, tuple, function(err, result){
+        storer.del(table, tuple, function(err, result){
 
                 if(!err) callback(200, null, result);
                 else callback(500, err, result);

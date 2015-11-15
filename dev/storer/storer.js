@@ -11,7 +11,7 @@
 
 var database = require('./database');
 
-var verbose = false;
+var verbose = true;
 
 /**
  * debug
@@ -93,10 +93,10 @@ var get = function(table, query, projection, callback){
    });
 }
 
-del = function(table, tuple, callback){
+var del = function(table, tuple, callback){
 
         tuple = eval('(' + decodeURIComponent(tuple)+ ')') ;
-
+		console.log(tuple)
         // check safe
 
         database.remove(table, tuple, function(err, result){
@@ -111,7 +111,7 @@ del = function(table, tuple, callback){
         });
  }
 
- drop = function(table, callback){
+ var drop = function(table, callback){
 
         database.drop(table, function(err, result){
 
