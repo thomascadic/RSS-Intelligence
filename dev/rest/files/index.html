@@ -9,7 +9,7 @@ Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 -->
 
-<html>
+<html >
 
 <head>
   <meta charset="utf-8">
@@ -47,6 +47,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <script src="bower_components/webcomponentsjs/webcomponents-lite.js"></script>
   <!-- endbuild -->
 
+
   <!-- will be replaced with elements/elements.vulcanized.html -->
   <link rel="import" href="elements/elements.html">
   <!-- endreplace-->
@@ -66,14 +67,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         <!-- Drawer Toolbar -->
         <paper-toolbar id="drawerToolbar">
-			<iron-icon class="big" src="images/searching50.png"></iron-icon>
-          <span class="paper-font-title">RSS-Intelligence</span>
+			<div class="horizontal end-justified layout">
+				<a data-route="home" href="/" on-click="onDataRouteClick">
+					<iron-icon class="big" src="images/searching50.png"></iron-icon>
+				</a>
+	          	<span class="paper-font-title">RSS-Intelligence</span>
+			</div>
         </paper-toolbar>
 
         <!-- Drawer Content -->
         <paper-menu class="list" attr-for-selected="data-route" selected="[[route]]">
 
-          <a data-route="search" href="/" on-click="onDataRouteClick">
+          <a data-route="search" href="/search" on-click="onDataRouteClick">
             <iron-icon icon="search"></iron-icon>
             <span>Search</span>
           </a>
@@ -123,22 +128,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <div class="content">
           <iron-pages attr-for-selected="data-route" selected="{{route}}">
 
+			<section data-route="home">
+			    <paper-material elevation="1">
+			  		<read-me></read-me>
+			    </paper-material>
+			</section>
+
             <section data-route="search">
-              <paper-material elevation="1">
                 <my-search></my-search>
-
-                <p class="paper-font-subhead">Results</p>
-
-              </paper-material>
-
             </section>
 
             <section data-route="settings">
-              <paper-material elevation="1">
-                <h2 class="page-title">Users</h2>
-                <p>This is the users section</p>
-                <a href="/users/Rob">Rob</a>
-              </paper-material>
+				  <my-settings></my-settings>
             </section>
 
             <section data-route="license">
@@ -167,28 +168,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       </paper-scroll-header-panel>
     </paper-drawer-panel>
 
-    <!-- Uncomment next block to enable Service Worker support (1/2) -->
-
-    <!--paper-toast id="caching-complete"
-                 duration="6000"
-                 text="Caching complete! This app will work offline.">
-    </paper-toast>
-
-    <platinum-sw-register auto-register
-                          clients-claim
-                          skip-waiting
-                          on-service-worker-installed="displayInstalledToast">
-      <platinum-sw-cache default-cache-strategy="fastest"
-                         cache-config-file="cache-config.json">
-      </platinum-sw-cache>
-  </platinum-sw-register-->
-
 
   </template>
 
   <!-- build:js scripts/app.js -->
   <script src="scripts/app.js"></script>
   <!-- endbuild-->
+  <!--script src="../bower_components/angular/angular.min.js"></script-->
+
 </body>
 
 </html>
