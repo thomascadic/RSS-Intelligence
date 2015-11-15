@@ -10,12 +10,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 
 <dom-module id="my-list">
+
   <template>
     <style>
       :host {
         display: block;
       }
     </style>
+
+	<iron-ajax url="127.0.0.1:8080/data/MAJ" last-response="{{items}}" auto></iron-ajax>
+
     <ul>
       <template is="dom-repeat" items="{{items}}">
         <li><span class="paper-font-body1">{{item}}</span></li>
@@ -36,14 +40,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           }
         },
         ready: function() {
-          this.items = [
-            'Responsive Web App boilerplate',
-            'Iron Elements and Paper Elements',
-            'End-to-end Build Tooling (including Vulcanize)',
-            'Unit testing with Web Component Tester',
-            'Routing with Page.js',
-            'Offline support with the Platinum Service Worker Elements'
-          ];
+
         }
       });
     })();

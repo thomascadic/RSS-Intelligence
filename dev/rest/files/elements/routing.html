@@ -23,7 +23,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     }
 
     // Routes
-    page('/', scrollToTop, function() {
+
+	page('/', scrollToTop, function() {
+	  app.route = 'home';
+	  app.role = 'ReadMe';
+	  app.icon = 'home' ;
+	});
+
+    page('/search', scrollToTop, function() {
       app.route = 'search';
 	  app.role = 'Search in indexed RSS feeds';
 	  app.icon = 'search' ;

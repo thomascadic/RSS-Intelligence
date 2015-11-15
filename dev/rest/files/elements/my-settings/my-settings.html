@@ -1,0 +1,234 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<dom-module id="my-settings">
+
+  <template>
+  	<style include="shared-styles"></style>
+	<style include="main"></style>
+
+	<style>
+		paper-scroll-header-panel {
+	      @apply(--layout-fit);
+	      @apply(--layout-vertical);
+	      @apply(--paper-font-common-base);
+	    }
+
+	    iron-list {
+	      /*background-color: var(--paper-grey-200, #eee);*/
+	      padding-bottom: 16px;
+	    }
+	    .item {
+	      @apply(--layout-horizontal);
+	      margin: 16px 16px 0 16px;
+	      padding: 20px;
+	      border-radius: 8px;
+	      background-color: white;
+	      border: 1px solid #ddd;
+	    }
+	    .item:focus {
+	      outline: 0;
+	      border-color: #666;
+	    }
+	    .avatar {
+	      height: 30px;
+	      width: 40px;
+	      border-radius: 5px;
+	      box-sizing: border-box;
+	      /*background-color: #DDD;*/
+	    }
+	    .pad {
+	      padding: 0 16px;
+	      @apply(--layout-flex);
+	      @apply(--layout-vertical);
+	    }
+	    .primary {
+	      font-size: 16px;
+	      font-weight: bold;
+	    }
+	    .secondary {
+	      font-size: 14px;
+	    }
+	    .dim {
+	      color: gray;
+	    }
+
+		paper-fab {
+	      position: fixed;
+	      bottom: 20px;
+	      right: 20px;
+		  z-index: 3;
+	    }
+
+		iron-icon.hoverGreen : hover {
+	      background-color: var(--paper-green-900);
+	    }
+
+
+
+    </style>
+
+	<iron-ajax auto
+			  url="/data/MAJ"
+			  params=''
+			  handle-as="json"
+			  on-response="handleResponse"
+			  debounce-duration="300">
+	</iron-ajax>
+
+	<paper-toast id="toast" text=""></paper-toast>
+
+	<section onclick="clickHandler(event)">
+		<paper-fab data-dialog="dropdown" class="blue" mini icon="add"></paper-fab>
+
+		<paper-dialog id="dropdown">
+		    <h2>Add a new URL feed</h2>
+
+		    <paper-input label="Type the feed URL" type="search" value="{{url::input}}"></paper-input>
+
+			<div class="buttons">
+		        <paper-button class="flat" dialog-dismiss>Cancel</paper-button>
+		        <paper-button on-click="addFeed" class="flat" dialog-confirm autofocus>OK</paper-button>
+		    </div>
+		  </paper-dialog>
+
+		  <iron-request id="fetchXHR"></iron-request>
+	</section>
+
+	<iron-list id="list" items="[[items]]" as="item">
+	    <template>
+	    	<div>
+	        	<div class="item">
+	        		<iron-icon class="avatar" icon="http" style$="[[styleForFreq(item.freq, 80)]]"></iron-icon>
+	              	<div class="pad">
+		                <div class="primary">[[item.url]]</div>
+		                <!--div class="secondary">[[item.nextRefresh]]</div-->
+						<br>
+		                <div class="secondary dim">
+							<span>Last refresh : <span>[[item.lastRefresh]]</span></span>
+							<br>
+							<span>Next update : <span>[[item.nextRefresh]]</span></span>
+						</div>
+	        		</div>
+    				<paper-icon-button class="hoverGreen" icon="refresh" on-click="refreshFeed"></paper-icon-button>
+					<paper-icon-button class="hoverGreen" icon="delete" on-click="deleteFeed"></paper-icon-button>
+					<!-- TODO : shitty buggy langage (polymer issue) -->
+					<!--paper-menu-button>
+						<paper-icon-button icon="more-vert" class="dropdown-trigger"></paper-icon-button>
+						<paper-menu class="dropdown-content">
+							<paper-item>Share</paper-item>
+							<paper-item>Settings</paper-item>
+							<paper-item>Help</paper-item>
+						</paper-menu>
+					</paper-menu-button-->
+	        	</div>
+	    	</div>
+	        </template>
+	      </iron-list>
+
+  </template>
+
+  <script>
+
+  	function clickHandler(e) {
+        var button = e.target;
+        while (!button.hasAttribute('data-dialog') && button !== document.body) {
+          button = button.parentElement;
+        }
+        if (!button.hasAttribute('data-dialog')) {
+          return;
+        }
+        var id = button.getAttribute('data-dialog');
+        var dialog = document.getElementById(id);
+        if (dialog) {
+          dialog.open();
+        }
+      }
+
+	  function displayResponse(json){
+		  'use strict' ; 	// ES6
+
+		  let toast = document.querySelector('#toast') ;
+		  let toastContent = "seems ok" ;
+		  console.log(json);
+		  	// TODO joli message
+		  toast.text = toastContent ;
+		  toast.show() ;
+		  console.log(json) ;
+	  }
+
+    (function () {
+      'use strict';
+
+      Polymer({
+        is: 'my-settings',
+        properties: {
+          items: {
+            type: Array,
+			notify : true
+		},
+		 url : {
+			 type : String,
+			 value : "",
+			 notify : true
+		 }
+        },
+		handleResponse : function(json){
+			this.items = json.detail.__data__.response.data ;
+			//for(item in this.items){
+				//item.lastRefresh = item.lastRefresh.split();
+			//}
+			//console.log(this.items);
+		},
+		addFeed : function(){
+			let request = this.$.fetchXHR ;
+			request.send({url: "/fetch", body: this.url, method : "POST"}) ;
+			request.completes.then(function() {
+				//TODO a tester/finir
+				//if(request.response.done[0]) this.push('items', { url : this.url });
+
+				//let list = document.querySelector('#list');
+				//list.iterator_.updateIteratedValue();
+				console.log(request.response) ;
+				displayResponse(request.response) ;
+	         });
+			this.url = "" ;
+		},
+		refreshFeed : function(e){
+			let feed = e.model.item ;
+			let request = this.$.fetchXHR ;
+			request.send({url: "/fetch", body: feed.url, method : "POST"}) ;
+			request.completes.then(function() {
+				// TODO : update iron-list
+				//let list = document.querySelector('#list');
+				//list.iterator_.updateIteratedValue();
+				//console.log(request.response) ;
+				displayResponse(request.response) ;
+	         });
+		},
+		deleteFeed : function(e){
+			let feed = e.model.item ;
+			let request = this.$.fetchXHR ;
+			request.send({url: "/data/MAJ"+"?tpl={\"_id\" : " + '"' + feed._id + '"' + "}", method : "DELETE"}) ;
+			request.completes.then(function() {
+				// TODO idem refresh
+
+				console.log(request.response) ;
+	         });
+		},
+		styleForFreq : function(freq, saturation){
+			// couleur boutton variant de [0 rouge -> 240 bleu] selon activité du feed
+			if (freq > 150000) freq = 150000 ;
+			else if (freq < 20000) freq = 20000 ;
+
+			let hue = ((freq - 20000) / (150000 - 20000)) * 240 + "";
+			let rule_back = "hsl("+ hue +", "+ saturation +"%, 70%);" ;
+			let rule_front = "hsl("+ hue +", "+ 100 +"%, 100%);" ; // white
+			return "background-color: "+ rule_back + ";" + "color : " + rule_front + ";";
+		},
+        ready: function(){
+        }
+      });
+    })();
+  </script>
+
+</dom-module>

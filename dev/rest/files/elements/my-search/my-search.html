@@ -1,46 +1,115 @@
-<!--
-@license
-Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
-This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
-The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
-The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
-Code distributed by Google as part of the polymer project is also
-subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
--->
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 
 <dom-module id="my-search">
   <template>
     <style include="shared-styles"></style>
+	<style include="main"></style>
 
     <style>
       :host {
         display: block;
       }
+
     </style>
 
-    <!--span class="paper-font-body2">Update text to change the greeting.</span-->
-    <!-- Listens for "input" event and sets greeting to <input>.value -->
-    <!--input class="paper-font-body2" value="{{search::input}}"-->
-	<paper-input label="Type your search here" type="search" value="{{search::input}}">
-	</paper-input>
-	<p>{{search}}</p>
-	<paper-toggle-button>ElasticSearch</paper-toggle-button>
+		<!-- REQUEST -->
+		<paper-material elevation="1">
+
+			<div class="vertical layout">
+
+				<!-- MODE BASIQUE -->
+				<template is="dom-if" if="{{!advanced}}">
+					<paper-input label="Type your search here" type="search" value="{{search::input}}"></paper-input>
+				</template>
+
+				<!-- MODE AVANCE -->
+				<template is="dom-if" if="{{advanced}}">
+					<!--paper-input label="ça marche !" type="search" value="{{search::input}}"></paper-input-->
+					<paper-dropdown-menu label="Your favorite pastry">
+				        <paper-dropdown class="dropdown">
+				          <core-menu class="menu">
+				              <paper-item>{{}}</paper-item>
+				          </core-menu>
+				        </paper-dropdown>
+				      </paper-dropdown-menu>
+				</template>
+
+				<br>
+				<div class="horizontal layout">
+					<div class="flex self-start">
+						<paper-button on-click="toggleElastic" class="flat" toggles>Elastic</paper-button>
+						<paper-button on-click="toggleMode" class="flat" toggles>Advanced</paper-button>
+					</div>
+					<div >
+						<paper-button on-click="runSearch" class="blue" raised>
+							<iron-icon class="big" layout="row" layout-align="end end" icon="search"></iron-icon>
+						</paper-button>
+					</div>
+				</div>
+			</div>
+		</paper-material>
+
+		<!-- RESULTS -->
+		<template is="dom-if" if="{{done}}">
+			<paper-material elevation="1">
+				<p class="paper-font-subhead">Results</p>
+			</paper-material>
+		</template>
   </template>
 
   <script>
+
+  var server = "127.0.0.1:8080" ;
+
+  function get(){
+
+
+  }
+
     (function() {
       'use strict';
 
       Polymer({
         is: 'my-search',
 
+		toggleMode : function(){
+			this.advanced = ! this.advanced ;
+		},
+
+		toggleElastic : function(){
+			this.elastic = ! this.elastic ;
+		},
+
+		runSearch : function(){
+			this.done = true ;
+		},
+
         properties: {
           search: {
             type: String,
             value: '',
             notify: true
-          }
+		},
+		  advanced : {
+			  type : Boolean,
+			  value : false,
+			  notify : true
+		  },
+		  elastic : {
+			  type : Boolean,
+			  value : false,
+			  notify : true
+		  },
+		  done : {
+			  type : Boolean,
+			  value : false,
+			  notify : true
+		  },
+		  results : {
+			  type : Object,
+			  value : {},
+			  notify : true
+		  }
         }
       });
     })();
