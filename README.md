@@ -14,7 +14,7 @@ ________________________________________________________________________________
 
 Ce projet a été réalise en node.js, conjointement avec MongoDb.
 En effet, la lecture et l'indexation de flux RSS faisant appel à des opérations
-typiques du devellopement WEB, tels que l'accès à des documents de type XML via requêtes HTTP.
+typiques du développement WEB, tels que l'accès à des documents de type XML via requêtes HTTP.
 
 D'autre part, un tel indexeur étant censé être scalable dans le cas réel, l'utilisation d'un langage
 naturellement multi-threadé et surtout non-bloquant (asynchrone) nous a paru tout à propos.
@@ -32,14 +32,47 @@ Il nous a donc semblé pertinent d'utiliser ces deux technologies conjointement.
 Il vous est possible soit d'installer le programme sur votre ordinateur, soit de consulter une version
 que nous avons préalablement déployé sur un serveur et qui s'execute depuis quelques temps.
 
+## Sur serveur distant
+
+Vous avez la possibilité de consulter les sorties du programme que nous avons préalablement déployé
+sur un serveur distant, et qui tourne depuis quelques jours.
+Ainsi, vous pourrez avoir un exemple de bilan des parcours automatiques de flux.
+Ce programme en ligne est accessible sur :	http://149.202.45.67:8080
+
 ## Sur le localhost
 
-Pour executer notre programme sur votre ordinateur, il vous faudra au préalable installer les programmes évoqués ci-dessus.
+Pour executer notre programme sur votre ordinateur, il vous faudra au préalable installer les programmes suivants : 
 
 ### node.js
 
 Pour installer node.js, rendez vous à la page suivante, et suivez les instructions suivant votre configuration
 https://nodejs.org/en/download/
+
+### ElasticSearch
+
+Le logiciel ne nécessite qu'une installation basique d'ElasticSearch pour fonctionner. Toutefois, il est souhaitable 
+de lancer au moins deux noeuds même dans une configuration de test. 
+Reportez-vous à la documentation officielle pour installer et configurer ElasticSearch : 
+- installation : https://www.elastic.co/products/elasticsearch
+Préférez la version 1.7.3 pour assurer la compatibilité avec le plugin elasticsearch-river-mongodb. 
+- configuration : indiquer un nom de cluster et un nom de noeud dans ./config/elasticsearch.yml
+
+**Plugin elasticsearch-river-mongodb**
+
+Le plugin river assure la liaison entre la base de données (ici MongoDB) et l'index ElasticSearch. C'est grâce à lui 
+que les nouvelles données seront automatiquement indexées. L'installation doit être effectuée pour chaque noeud ElasticSearch.
+
+Installation : bin/plugin --install com.github.richardwilly98.elasticsearch/elasticsearch-river-mongodb/2.0.9
+
+Source : https://github.com/richardwilly98/elasticsearch-river-mongodb/
+
+**Plugin moniteur elasticsearch-head**
+
+Commande d'installation à adapter : sudo elasticsearch/bin/plugin -install mobz/elasticsearch-head
+
+La console d'administration est accessible à l'adresse http://localhost:9200/_plugin/head/
+
+Source : https://github.com/mobz/elasticsearch-head
 
 ### MongoDB
 
@@ -54,13 +87,6 @@ Windows https://docs.mongodb.org/master/tutorial/install-mongodb-on-windows/
 Vous pourrez alors executer RSS-Intelligence, en vous rendant dans ./bin, et en éxécutant run.sh
 (à adapter si vous utilisez Windows)
 Suivant votre système, certains droits d'éxécution peuvent être nécéssaires (notamment pour MongoDB)
-
-## Sur serveur distant
-
-Vous avez aussi la possibilité de consulter les sorties du programme que nous avons préalablement déployé
-sur un serveur distant, et qui tourne depuis quelques jours.
-Ainsi, vous pourrez avoir un exemple de bilan des parcours automatiques de flux.
-Ce programme en ligne est accessible sur :	http://149.202.45.67:8080
 
 # Execution
 

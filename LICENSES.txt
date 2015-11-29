@@ -1,6 +1,5 @@
 ---------------------------------
    "RSS-Intelligence"
-   "FEED-Collector" sub-project
    modules & licenses
 ---------------------------------
 
@@ -51,3 +50,13 @@ mime
 	Copyright © 2010 Benjamin Thomas, Robert Kieffer
 	Licence : MIT
 	Link : https://github.com/broofa/node-mime
+
+elasticsearch-river-mongodb
+	Copyright © 2009-2012 Shay Banon and ElasticSearch <http://www.elasticsearch.org>
+	Licence : Apache 2.0
+	Link : https://github.com/richardwilly98/elasticsearch-river-mongodb/
+
+elasticsearch-head
+	Copyright © 2010-2013 Ben Birch
+	Licence : Apache 2.0
+	Link : https://github.com/mobz/elasticsearch-head
