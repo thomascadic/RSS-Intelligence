@@ -55,22 +55,44 @@ var studyFrequencyMAJ = function(url, stats){
 			trace("Dernière visite il y a "+t+"s");
 			var freq = res.freq ;
 			if(percentNew == 0 ){ 		// evitons les divisions par zero
-				freq *= 2 ;
-			}if(percentNew == 100 ){ 	// on a perdu de l'information, on divise le prochain temps par deux
+				freq *= 1.25 ;	// on ajoute 25% de temps de visite
+			}else if(percentNew == 100 ){ 	// on a perdu de l'information, on divise le prochain temps par deux
 				freq /= 2 ;
 			}else freq = (75*t)/percentNew;	// sinon on estime le temps pour parvenir à 75%
 
-			if(freq > (3600 * 48)) freq = 3600 * 48 ;	// on met une borne supérieure de deux jours
+			if(freq > (3600 * 48)){
+				freq = 3600 * 48 ;	// on met une borne supérieure de deux jours
+			}
 			freq = Math.round(freq) ;
 			var next = new Date((new Date).getTime() + (freq * 1000));
 
-			storer.update("MAJ", {_id : id}, {lastEpoch : (new Date).getTime(), freq : freq, lastRefresh : percentNew+"%", nextRefresh : next.toUTCString()}, function(res){ // on stocke le taux de renuovellement entre deux visites
+			storer.update("MAJ",
+			{_id : id},
+			{
+				lastEpoch : (new Date).getTime(),
+				nextEpoch : next.getTime(),
+				freq : freq,
+				lastTx : percentNew+"%",
+				lastRefresh : (new Date).toUTCString(),
+				nextRefresh : next.toUTCString()
+			},
+				function(res){ // on stocke le taux de renuovellement entre deux visites
 				trace("Mise à jour de l'URL") ;
 			}) ;
 
 		}else{	// cette url est nouvelle, on la stocke avec une valeur defaut d'une heure
 			trace("URL inconnue : "+url);
-			storer.store("MAJ", {_id : id, url : url, lastEpoch : (new Date).getTime(), freq : 3600}, function(res){ // par défaut, on attend une heure
+			var next = new Date((new Date).getTime() + (3600 * 1000));
+			storer.store("MAJ",
+			{
+				_id : id,
+				url : url,
+				lastEpoch : (new Date).getTime(),
+				nextEpoch : next.getTime(),
+				lastRefresh : (new Date).toUTCString(),
+				nextRefresh : next.toUTCString(),
+				freq : 3600
+			}, function(res){ // par défaut, on attend une heure
 				trace("URL entrée dans la table") ;
 			}) ;
 		}

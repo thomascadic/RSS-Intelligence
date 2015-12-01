@@ -44,6 +44,8 @@
 	    .primary {
 	      font-size: 16px;
 	      font-weight: bold;
+		  max-width: 35% ;
+		  text-overflow: ellipsis;
 	    }
 	    .secondary {
 	      font-size: 14px;
@@ -62,8 +64,6 @@
 		iron-icon.hoverGreen : hover {
 	      background-color: var(--paper-green-900);
 	    }
-
-
 
     </style>
 
@@ -104,7 +104,7 @@
 		                <!--div class="secondary">[[item.nextRefresh]]</div-->
 						<br>
 		                <div class="secondary dim">
-							<span>Last refresh : <span>[[item.lastRefresh]]</span></span>
+							<span>Last refresh : <span>[[item.lastTx]]</span></span>
 							<br>
 							<span>Next update : <span>[[item.nextRefresh]]</span></span>
 						</div>

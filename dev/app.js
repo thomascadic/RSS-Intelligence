@@ -22,12 +22,12 @@ api.listen(8080) ;
 if(auto){
     setTimeout(function(){
 
-        provider.readFile('../data/flux.txt');
+        //provider.readFile('../data/flux.txt');
     }, 1000) ;  // laisse le temps à la dbb de s'initialiser
 
 	setTimeout(function(){
 
-		daemon() ;
+		daemon2() ;
 	}, 15000) ;  // laisse le temps à la dbb de s'initialiser
 }
 
@@ -56,6 +56,58 @@ function daemon(){
 				visit(tab[i]);
 			}
 	    }
+	});
+}
+
+function daemon2(){
+
+	console.log("Lancement du daemon de mise à jour....") ;
+
+	setInterval(function(){
+
+		request({
+			url: 'http://127.0.0.1:8080/data/MAJ',
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+		}, function(error, response, data){
+			if(error) {
+				console.log(error);
+			}else{
+				var now = (new Date()).getTime() ;
+				data = JSON.parse(data);
+				var tab = data.data ;
+				for(i in tab){
+					i = tab[i] ;
+					if(i.nextEpoch <= now){
+						var url = decodeURIComponent(i.url) ;
+						console.log(url+" : refresh needed")
+						majURL(url);
+					}
+				}
+			}
+		});
+	}, 30*60*1000) ;
+}
+
+function majURL(url){
+
+	console.log("[daemon]\t--- MAJ "+url+" ---");
+	request.post({
+		url: 'http://127.0.0.1:8080/fetch',
+		headers: {
+			'Content-Type': 'text/plain; charset=utf-8',
+        	'Content-Length': url.length
+    	},
+		body: url
+		},
+		function(error, response, data){
+		if(error) {
+			console.log(error);
+		}else{	// maj effectuée
+			console.log("[daemon]\t--- "+url+" updated !---");
+		}
 	});
 }
 

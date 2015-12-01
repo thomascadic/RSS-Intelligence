@@ -25,19 +25,73 @@
 				<!-- MODE AVANCE -->
 				<template is="dom-if" if="{{advanced}}">
 					<!--paper-input label="ça marche !" type="search" value="{{search::input}}"></paper-input-->
-					<paper-dropdown-menu label="Your favorite pastry">
-				        <paper-dropdown class="dropdown">
-				          <core-menu class="menu">
-				              <paper-item>{{}}</paper-item>
-				          </core-menu>
-				        </paper-dropdown>
-				      </paper-dropdown-menu>
+					    <template is="dom-repeat" items="{{advancedArguments}}" id="arguments" as="arg">
+
+							<!-- LINE -->
+							<div class="center horizontal layout">
+
+								<paper-dropdown-menu label="Fields" class="flex-2" >
+									<paper-menu id={{fieldsID(index)}} multi selected="[2]" class="dropdown-content">
+										<paper-item>Any</paper-item>
+										<paper-item>Title</paper-item>
+										<paper-item>Content</paper-item>
+										<paper-item>Published</paper-item>
+										<paper-item>Author</paper-item>
+										<paper-item>Link</paper-item>
+										<paper-item>Language</paper-item>
+										<paper-item>Feed Name</paper-item>
+										<paper-item>DocType</paper-item>
+									</paper-menu>
+								</paper-dropdown-menu>
+
+								<paper-dropdown-menu label="Boolean" class="flex-2">
+									<paper-menu id={{boolID(index)}} class="dropdown-content">
+										<paper-item>MUST</paper-item>
+										<paper-item>SHOULD</paper-item>
+										<paper-item>MUST NOT</paper-item>
+									</paper-menu>
+								</paper-dropdown-menu>
+
+								<div class="flex-4">
+									<paper-input label="Query" type="search" value="{{arg.search::input}}"></paper-input>
+									<paper-tooltip>AND OR * $ ~</paper-tooltip>
+								</div>
+
+								<div class="flex-4">
+									<paper-slider id="{{boostID(index)}}" max="5" pin  step="0.1" value="1" class="red"></paper-slider>
+									<paper-tooltip>Boost</paper-tooltip>
+								</div>
+
+								<!--div class="center vertical layout flex-4 self-stretched">
+									<div class="flex">
+										<paper-slider id="weight" pin snaps max="5" max-markers="5" step="1" value="1" class="blue"></paper-slider>
+										<paper-tooltip>Fuzziness</paper-tooltip>
+									</div>
+									<div class="flex">
+										<paper-slider id="boost" max="5" pin  step="0.1" value="1" class="red"></paper-slider>
+										<paper-tooltip>Boost</paper-tooltip>
+									</div>
+								</div-->
+
+								<div class="center vertical layout flex self-stretched">
+									<div class="flex">
+										<paper-icon-button icon="add" on-click="addArgument"></paper-icon-button>
+										<paper-tooltip>Add new query argument</paper-tooltip>
+									</div>
+									<div class="flex">
+										<paper-icon-button icon="clear" on-click=""></paper-icon-button>
+										<paper-tooltip>Delete this argument</paper-tooltip>
+									</div>
+								</div>
+							</div> <!-- /LINE-->
+							<div class="divider"></div>
+					    </template>
 				</template>
 
 				<br>
 				<div class="horizontal layout">
 					<div class="flex self-start">
-						<paper-button on-click="toggleElastic" class="flat" toggles>Elastic</paper-button>
+						<!--paper-button on-click="toggleElastic" class="flat" toggles>Elastic</paper-button-->
 						<paper-button on-click="toggleMode" class="flat" toggles>Advanced</paper-button>
 					</div>
 					<div >
@@ -52,19 +106,17 @@
 		<!-- RESULTS -->
 		<template is="dom-if" if="{{done}}">
 			<paper-material elevation="1">
-				<p class="paper-font-subhead">Results</p>
+				<p id="results_head" class="paper-font-caption"></p>
+				<div id="results_body"></div>
 			</paper-material>
 		</template>
+
+		<iron-request id="XHR"></iron-request>
   </template>
 
   <script>
 
   var server = "127.0.0.1:8080" ;
-
-  function get(){
-
-
-  }
 
     (function() {
       'use strict';
@@ -75,14 +127,176 @@
 		toggleMode : function(){
 			this.advanced = ! this.advanced ;
 		},
-
 		toggleElastic : function(){
 			this.elastic = ! this.elastic ;
 		},
-
 		runSearch : function(){
+			let request = this.$.XHR ;
+			this.done = false ;
+			if(!this.advanced){
+				let query_string = {
+					"query_string" : {
+						"default_field" : "_all",
+						"query" : this.search
+					}
+				};
+				let should = this.query.query.bool["should"];
+				should.push(query_string);
+			}
+			else{
+				var i = 0 ;
+				for(i = 0 ; i < this.advancedArguments.length ; i++){
+					let arg = this.advancedArguments[i] ;
+
+					// FIELDS
+					let fields_form = document.querySelector("#fields_"+i).selectedItems,
+						fields = [] ;
+					fields_form.map(function(e){
+						let field = e.textContent.replace(/\s/g, '') ;
+						let prefix = "RSS." ;
+						switch (field){
+							case "Any" : {
+								field = "_all" ;
+								break ;
+							}
+							case "Title" : {
+								field = prefix + "title" ;
+								break ;
+							}
+							case "Content" : {
+								field = prefix + "content" ;
+								break ;
+							}
+							case "Published" : {
+								field = prefix + "published" ;
+								break ;
+							}
+							case "Author" : {
+								field = prefix + "author" ;
+								break ;
+							}
+							case "Link" : {
+								field = prefix + "link" ;
+								break ;
+							}
+							case "Language" : {
+								field = prefix + "language" ;
+								break ;
+							}
+							case "Feed Name" : {
+								field = prefix + "feed.name" ;
+								break ;
+							}
+							case "DocType" : {
+								field = prefix + "mimetype" ;
+								break ;
+							}
+						}
+						fields.push(field);
+					});
+
+					// BOOL
+					let bool_form = document.querySelector("#bool_"+i).selectedItem,
+						bool = bool_form.textContent.replace(/\s/g, '');
+
+					// SEARCH
+					let search = arg.search ;
+
+					// BOOST
+					let boost = document.querySelector("#boost_"+i).value;
+
+					let query_string = {
+						"query_string" : {
+							"fields" : fields,
+							"query" : search,
+							//"analyzer": "snowball",
+							"boost" : boost
+						}
+					};
+
+					switch(bool){
+						case "MUST" : {
+							let must = this.query.query.bool["must"] ;
+							must.push(query_string);
+							break;
+						}
+						case "SHOULD" : {
+							let should = this.query.query.bool["should"] ;
+							should.push(query_string);
+							break;
+						}
+						case "MUSTNOT" : {
+							let must_not = this.query.query.bool["must_not"] ;
+							must_not.push(query_string);
+							break;
+						}
+						default : break ;
+					}
+				}
+			}
+			//console.log(this.query);
+			request.send({url: "http://149.202.45.67:9200/rss-index/_search", body: JSON.stringify(this.query), method : "POST"}) ;
+			request.completes.then(function() {
+				let result = JSON.parse(request.response),
+					ms = result.took,
+					total = result.hits.total,
+					hits = result.hits.hits ;
+
+				document.getElementById('results_head').innerText = "(" + total + " hits in " + ms +"ms)";
+				//document.getElementById('results_body').innerText = JSON.stringify(hits);
+				let innerCode = "" ; // promise hell :(
+				if(hits.length == 0) innerCode += "<img src='http://memesvault.com/wp-content/uploads/Sad-Cat-Meme-28.jpg'></img>" ;
+				else{
+						for(let i in hits){
+						let hit = hits[i] ;
+						innerCode += '<p class="paper-font-headline blue">' ;
+						innerCode += hit._source.title;
+						innerCode += '</p>' ;
+
+						innerCode += '<a class="paper-font-subhead green" href="' + hit._source.link + '">' ;
+						innerCode += hit._source.link ;
+						innerCode += '</a>' ;
+
+						innerCode += '<p class="paper-font-body1">' ;
+						innerCode += hit._source.content;
+						innerCode += '</p>' ;
+
+						innerCode += '<paper-tooltip>'+ hit.score + '</paper-tooltip>';
+						innerCode += '<div class="divider"></div>' ;
+					}
+				}
+				document.getElementById('results_body').innerHTML = innerCode;
+			 });
+			 this.query = {
+				 "query" : {
+					 "bool" : {
+						 "must" : [],
+						 "must_not" : [],
+						 "should" : [],
+						 "minimum_should_match" : 1
+					 }
+				 },
+				 "from":0,
+				 "size":10,
+				 "sort":[],
+				 "facets":{}
+			 };
 			this.done = true ;
+			this.hits = g_hits ;
+			console.log(this.hits);
 		},
+		addArgument : function(){
+			this.push('advancedArguments', {});
+		},
+		fieldsID: function(index) {
+                return "fields_"+index;
+        },
+		boolID: function(index) {
+                return "bool_"+index;
+        },
+		boostID: function(index) {
+                return "boost_"+index;
+        },
 
         properties: {
           search: {
@@ -95,9 +309,37 @@
 			  value : false,
 			  notify : true
 		  },
+		  advancedArguments : {
+			  type : Array,
+			  value : [{}],
+			  notify : true
+		  },
+		  query : {
+			  type : Object,
+			value : {
+				"query" : {
+					"bool" : {
+						"must" : [],
+						"must_not" : [],
+						"should" : [],
+						"minimum_should_match" : 1
+					}
+				},
+				"from":0,
+				"size":10,
+				"sort":[],
+				"facets":{}
+			},
+			notify : true
+		  },
+		  hits : {
+			  type : Array,
+			  value : [],
+			  notify: true
+		  },
 		  elastic : {
 			  type : Boolean,
-			  value : false,
+			  value : true,
 			  notify : true
 		  },
 		  done : {

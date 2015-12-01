@@ -7,6 +7,14 @@
         @apply(--paper-font-display2);
       }
 
+	  .divider{
+		  height: 1px;
+			overflow: hidden;
+			background-color: #e0e0e0;
+			margin-top: 15px ;
+			margin-bottom: 15px ;
+		}
+
 	  paper-dialog {
 		  background: #fafafa;
 		  width: 400px;
@@ -72,6 +80,27 @@
         --paper-toggle-button-unchecked-ink-color: var(--paper-orange-900);
       }
 
+	  paper-slider.blue {
+      --paper-slider-knob-color: var(--paper-light-blue-500);
+      --paper-slider-active-color: var(--paper-light-blue-500);
+	  --paper-slider-pin-color: var(--paper-light-blue-500);
+    }
+    paper-slider.red {
+      --paper-slider-knob-color: var(--paper-red-500);
+      --paper-slider-active-color: var(--paper-red-500);
+	  --paper-slider-pin-color: var(--paper-red-500);
+    }
+    paper-slider.green {
+      --paper-slider-knob-color: var(--paper-green-500);
+      --paper-slider-active-color: var(--paper-green-500);
+	  --paper-slider-pin-color: var(--paper-green-500);
+    }
+    paper-slider.orange {
+      --paper-slider-knob-color: var(--paper-orange-500);
+      --paper-slider-active-color: var(--paper-orange-500);
+      --paper-slider-pin-color: var(--paper-orange-500);
+    }
+
 	  #drawerToolbar {
 	    color: var(--secondary-text-color);
 	    background-color: var(--drawer-menu-color);
@@ -122,6 +151,8 @@
 	    padding: 0 16px;
 	  }
 
+
+
 	  paper-toolbar.tall .app-name {
 	    font-size: 40px;
 	    font-weight: 300;
@@ -157,6 +188,12 @@
 	  /* Small */
 	  @media (max-width: 600px) {
 
+		  paper-dialog {
+			  background: #fafafa;
+			  width: 200px;
+	  			overflow: auto;
+		  }
+
 	    paper-material {
 	      --menu-container-display: none;
 	      width: calc(97.33% - 32px);
@@ -183,8 +220,23 @@
 
 	  }
 
+	  @media (max-width: 800px) {
+
+		  #line{
+		  	flex-direction: column;
+		  }
+
+	  }
+
+
 	  /* Tablet+ */
 	  @media (min-width: 601px) {
+
+		  paper-dialog {
+			  background: #fafafa;
+			  width: calc(80% - 32px);
+	  		overflow: auto;
+		  }
 
 	    paper-material {
 	      width: calc(98% - 46px);
@@ -202,7 +254,6 @@
 	    }
 
 	  }
-
     </style>
   </template>
 </dom-module>
