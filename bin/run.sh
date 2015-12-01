@@ -9,6 +9,7 @@
 ../../ELK/elasticsearch-1.7.3-node-01/bin/elasticsearch &
 ../../ELK/elasticsearch-1.7.3-node-02/bin/elasticsearch &
 
-wait 1
+# Attend que les instances ElasticSearch et MongoDB soient lancées pour démarrer l'app.
+sleep 10
 
 node ../dev/app.js

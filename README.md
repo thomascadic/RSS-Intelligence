@@ -81,11 +81,13 @@ Source : https://github.com/mobz/elasticsearch-head
 
 ### MongoDB
 
-Pour installer MongoDB, là encore rendez vous sur la page suivante, suivant votre configuration
+Pour installer MongoDB, là encore rendez vous sur la page suivante, suivant votre configuration :
 
 Linux : https://docs.mongodb.org/master/administration/install-on-linux/
+
 MacOS : https://docs.mongodb.org/master/tutorial/install-mongodb-on-os-x/
-Windows https://docs.mongodb.org/master/tutorial/install-mongodb-on-windows/
+
+Windows : https://docs.mongodb.org/master/tutorial/install-mongodb-on-windows/
 
 ### rss-intelligence
 
@@ -114,10 +116,10 @@ Champ `query` optionnel. Table : `RSS` ou `MAJ`
 ```
 @/data/$table?(query={xxx})	
 ``` 
-Récupérer un article, connaissant son ìd` : 
+Récupérer un article, connaissant son `id` : 
 ```
- @/data/element/article/$id	
- ``` 
+@/data/element/article/$id	
+``` 
  	
 **POST**
 
