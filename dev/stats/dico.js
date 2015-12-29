@@ -21,7 +21,9 @@
  *  }
  */
 
-"use strict" // use of Set (ES6 required)
+"use strict" // utilisation du mode strict, pour s'assurer que le for(..of..) soit interprété correctement (ES6)
+			// par ailleurs, un conflit de nom serait possible avec le module vectorize,
+			// ce genre d'erreur est plus vite detecté en mode strict
 
 var fs = require('fs');
 
@@ -121,9 +123,8 @@ var generateDictionnary = function(corpus, language, cb){
 				for(let i in articles){
 					nbDocs++;
 					let article = articles[i];
-					//let terms = new Set(); // contiendra les mots de l'item
 
-					// nettoyage item
+					// pré-nettoyage item dans le cas d'une obtention de code HTML
 					article.content = htmlToText.fromString(article.content,{
 			    		wordwrap: false,
 						ignoreImage: true,
@@ -133,7 +134,7 @@ var generateDictionnary = function(corpus, language, cb){
 					corpus_out.push({"label" : feed.category , "language" : language, "content" : article.content});
 
 					let terms = tokenize(article.content, language) ;
-					// pour la generation du dico, on ne note que la présence du terme dans le document
+					// pour la generation du dico, on ne note que la présence du terme dans le document, pas ses occurrences
 					// -> on applique un filtre d'unicité au tableau obtenu
 					terms = terms.reverse().filter(function (e, i, arr) {
 					    return arr.indexOf(e, i+1) === -1;
