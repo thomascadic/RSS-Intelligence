@@ -33,7 +33,11 @@ let dicoFR,
 
 let corpus;
 
-let output = [];
+let outputFR = [],
+	outputEN = [];
+
+// https://en.wikipedia.org/wiki/Additive_smoothing
+let smoothing = 0.0001 ;
 
 /**
  *  Chargement des structures de données stockées sur disque, et lancement du programme
@@ -59,48 +63,63 @@ fs.readFile("../../data/dicofrench.json" , 'utf8', function (err,data) {
             for(let doc of corpus){
                 if(doc.content) vectorize(doc.content, doc.language, doc.label);
             }
-            events.emit('save');
+            events.emit('save', "french");
+			events.emit('save', "english");
         });
     });
 });
 
-events.on('save', function(){
+events.on('save', function(language){
 
-	let path = "../../data/vectors.json";
-	fs.writeFile(path, JSON.stringify(output), function (err) {
-		if (err) throw err;
-		console.log(path+" : saved");
-		});
+	let path = "../../data/vectors" + language + ".json";
+	if (language === "french"){
+		fs.writeFile(path, JSON.stringify(outputFR), function (err) {
+			if (err) throw err;
+			console.log(path+" : saved");
+			});
+	}else{
+		fs.writeFile(path, JSON.stringify(outputEN), function (err) {
+			if (err) throw err;
+			console.log(path+" : saved");
+			});
+	}
 });
 
 var vectorize = function(doc, language, label){
 
     let features = tokenize(doc, language);
     let dico = (language === "french") ? dicoFR.dico : dicoEN.dico ;
-    let vector = Array.apply(null, Array(Object.keys(dico).length + 1)).map(Number.prototype.valueOf,0.001); // petite valeur non nulle
+    let vector = Array.apply(null, Array(Object.keys(dico).length + 1)).map(Number.prototype.valueOf, smoothing);
     let total = features.length ;
     let viewed = [];
     for(let feature of features){
+		// on retrouve l'entree dans le dico directement avec le stem
+		// l'efficacité est assurée par l'implémentation de la classe Object de javascript sur V8 en particulier
+		// qui se comporte par défaut comme une hashmap, avec un temps d'accès proche de O(1).
+		// cf. https://github.com/v8/v8/blob/master/src/objects-inl.h
         if(dico[feature] && viewed.indexOf(feature) === -1 ){
-
             // calcul du term frequency
             let tf = 0 ;
             for(let i of features){
                 if (i === feature) tf +=1 ;
             }
-            viewed.push(feature); // on ne traitera plus ce feature par la suite
-            tf = tf / total ; // normalisation du term frequency
+            viewed.push(feature); 	// on ne traitera plus ce feature par la suite
+            tf = tf / total ; 		// normalisation du term frequency
 
             // recupération de l'idf associé à feature sur l'ensemble du corpus
             let entry = dico[feature];
             let idf_t = entry.idf;
 
-            // assign
+			//tf = Math.log(tf + 1);	//
+			//tf = tf / total ;		// normalization
+			//tf = tf * idf_t ;		//
+
+            // assignation dans le vecteur
             let i = entry.id ;
             vector[i] = tf * idf_t; //tf-idf normalized
         }
     }
     vector[vector.length] = label ;
-    //console.log(vector);
-    output.push(vector);
+	if (language === "french") outputFR.push(vector) ;
+	else outputEN.push(vector);
 }
