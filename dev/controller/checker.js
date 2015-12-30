@@ -11,7 +11,19 @@ var md5 = require('md5'),
 	detector = new (require('languagedetect')),
 	storer = require("../storer/storer"),
 	htmlToText = require('html-to-text'),
-	mime = require('mime');
+	mime = require('mime'),
+	BayesClassifier = require('../stats/naivebayes');
+
+var classifierFR = new BayesClassifier("french");
+var classifierEN = new BayesClassifier("english");
+
+classifierFR.init();
+classifierEN.init();
+
+classifierFR.train();
+classifierEN.train();
+
+
 
 	//mime.default_type = 'text/plain';
 
@@ -106,6 +118,14 @@ var validate = function(articles, callback){
 
 		// MIME-Type detection
 		article.mimetype = mime.lookup(article.link);
+
+		// Category guess
+		if(article.language === "french"){
+			article.category = classifierFR.classify(article.content).label;
+			// on n'indique pas la proba, car dans notre cas, c'est un score qui n'a pas de sens que comparé aux autres
+		}else {
+			article.category = classifierEN.classify(article.content).label;
+		}
 
 		// stockage
 		storer.storeArticle(id, article, function(err, title){ // nécéssité de recuperer le titre, car variable réécrite depuis
