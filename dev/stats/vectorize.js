@@ -89,7 +89,8 @@ var vectorize = function(doc, language, label){
 
     let features = tokenize(doc, language);
     let dico = (language === "french") ? dicoFR.dico : dicoEN.dico ;
-    let vector = Array.apply(null, Array(Object.keys(dico).length + 1)).map(Number.prototype.valueOf, smoothing);
+	let ret = {};
+    let vector = Array.apply(null, Array(Object.keys(dico).length)).map(Number.prototype.valueOf, smoothing);
     let total = features.length ;
     let viewed = [];
     for(let feature of features){
@@ -119,7 +120,8 @@ var vectorize = function(doc, language, label){
             vector[i] = tf * idf_t; //tf-idf normalized
         }
     }
-    vector[vector.length] = label ;
-	if (language === "french") outputFR.push(vector) ;
-	else outputEN.push(vector);
+	ret.values = vector ;
+    ret.label = label ;
+	if (language === "french") outputFR.push(ret) ;
+	else outputEN.push(ret);
 }
