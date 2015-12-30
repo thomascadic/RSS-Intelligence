@@ -7,6 +7,7 @@ var classifierFR = new BayesClassifier("french");
 var classifierEN = new BayesClassifier("english");
 var corpus ;
 
+// assurance
 var totalTestsFR = 0,
     totalTestsEN = 0,
     totalTests = 0 ;
@@ -14,10 +15,33 @@ var totalTestsFR = 0,
 var correctGuessesFR = 0,
     correctGuessesEN = 0;
 
+// matrice confusion
+
+//var confusion = [][];
+
+var labels = [
+    "ART",
+    "BUSINESS",
+    "CINEMA",
+    "HEALTH",
+    "SCIENCE",
+    "SPORT"
+]
+
+function index(label){
+    return labels.indexOf(label);
+}
+
+var confusion = [ [], [], [], [], [], [] ] ;
 
 setTimeout(function(){
     classifierFR.init();
     classifierEN.init();
+    for (var i = 0; i < confusion.length; i++) {
+        for(var j = 0 ; j < confusion.length ; j++){
+            confusion[j][i] = 0 ;
+        }
+    }
     console.log("classifiers initialized")
     setTimeout(function(){
         classifierFR.train();
@@ -32,16 +56,29 @@ setTimeout(function(){
 
                 for(let doc of corpus){
                     if(doc.language === "french"){
-                        if(classifierFR.classify(doc.content).label === doc.label) correctGuessesFR++ ;
+                        let real = doc.label ;
+                        let predicted = classifierFR.classify(doc.content).label ;
+
+                        if(predicted === real) correctGuessesFR++ ;
                         totalTestsFR++;
+
+                        confusion[index(real)][index(predicted)]++ ;
                     }else{
-                        if(classifierEN.classify(doc.content).label === doc.label) correctGuessesEN++ ;
+                        let real = doc.label ;
+                        let predicted = classifierEN.classify(doc.content).label ;
+
+                        if(predicted === real) correctGuessesEN++ ;
                         totalTestsEN++;
+
+                        confusion[index(real)][index(predicted)]++ ;
                     }
                     totalTests++;
                     if(totalTests == corpus.length){
+                        console.log("Accuracy");
                         console.log("FR : " + (correctGuessesFR / totalTestsFR)*100 + "%");
                         console.log("EN : " + (correctGuessesEN / totalTestsEN)*100 + "%");
+                        console.log("Confusion Matrix : (ART BUSINESS CINEMA HEALTH SCIENCE SPORT)");
+                        console.log(confusion);
                     }
                 }
             });
