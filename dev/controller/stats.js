@@ -58,7 +58,7 @@ var studyFrequencyMAJ = function(url, stats){
 				freq *= 1.25 ;	// on ajoute 25% de temps de visite
 			}else if(percentNew == 100 ){ 	// on a perdu de l'information, on divise le prochain temps par deux
 				freq /= 2 ;
-			}else freq = (75*t)/percentNew;	// sinon on estime le temps pour parvenir à 75%
+			}else freq = (50*t)/percentNew;	// sinon on estime le temps pour parvenir à 50%
 
 			if(freq > (3600 * 48)){
 				freq = 3600 * 48 ;	// on met une borne supérieure de deux jours
