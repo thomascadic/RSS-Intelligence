@@ -12,4 +12,7 @@
 # Attend que les instances ElasticSearch et MongoDB soient lancées pour démarrer l'app.
 sleep 10
 
+node ../dev/stats/dico.js && node ../dev/stats/vectorize.js
+sleep 5
+
 node ../dev/app.js
