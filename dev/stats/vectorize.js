@@ -111,10 +111,6 @@ var vectorize = function(doc, language, label){
             let entry = dico[feature];
             let idf_t = entry.idf;
 
-			//tf = Math.log(tf + 1);	//
-			//tf = tf / total ;		// normalization
-			//tf = tf * idf_t ;		//
-
             // assignation dans le vecteur
             let i = entry.id ;
             vector[i] = tf * idf_t; //tf-idf normalized

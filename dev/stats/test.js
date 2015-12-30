@@ -40,13 +40,13 @@ setTimeout(function(){
                     }
                     totalTests++;
                     if(totalTests == corpus.length){
-                        console.log("FR : " + correctGuessesFR / totalTestsFR);
-                        console.log("EN : " + correctGuessesEN / totalTestsEN);
+                        console.log("FR : " + (correctGuessesFR / totalTestsFR)*100 + "%");
+                        console.log("EN : " + (correctGuessesEN / totalTestsEN)*100 + "%");
                     }
                 }
             });
             //console.log(classifier);
-            //console.log(classifierFR.getClassifications("Les causes du déraillement survenu dimanche 27 décembre 2015 ne sont pas encore connues. Les médias locaux font état d'une \"fuite mineure\" de produit chimique et de carburant."));
+            //console.log(classifierEN.getClassifications("Even as the congratulations flowed in last night, Petr Cech will have made one final check. Both his current club,..."));
         }, 1000);
     }, 1000);
 }, 1000);
